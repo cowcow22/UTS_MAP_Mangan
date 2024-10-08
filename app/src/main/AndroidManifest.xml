@@ -13,6 +13,9 @@
         android:theme="@style/Theme.UTS_MAP_Mangan"
         tools:targetApi="31">
         <activity
+            android:name=".WelcomePageNameActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
