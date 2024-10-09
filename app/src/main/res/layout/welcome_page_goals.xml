@@ -8,14 +8,14 @@
     android:background="@drawable/background_gradient"
     android:padding="16dp">
 
-
     <!-- Title -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="What is your goal?"
-        android:textSize="24sp"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="30dp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,63 +24,80 @@
         android:layout_marginTop="168dp"/>
 
     <!-- Subtitle -->
+
+    <!-- Weight loss button -->
     <TextView
         android:id="@+id/subtitleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Please choose one, don't worry you can still edit your goal in this app"
-        android:textSize="14sp"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins_regular"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Please choose one, don't worry you can still edit your goal in this app"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
-    <!-- Weight loss button -->
     <Button
         android:id="@+id/weightLossButton"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:text="Weight loss"
-        android:background="@drawable/green_button_background"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/subtitleTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"
+        android:layout_height="60dp"
         android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"/>
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="@color/green_button"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Weight loss"
+        android:textColor="@android:color/white"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitleTextView"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="2dp" />
 
     <!-- Maintain weight button -->
-    <Button
-        android:id="@+id/maintainWeightButton"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:text="Maintain current weight"
-        android:background="@drawable/green_button_background"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/weightLossButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"/>
 
     <!-- Weight gain button -->
     <Button
+        android:id="@+id/maintainWeightButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="@color/green_button"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Maintain current weight"
+        android:textColor="@color/white"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weightLossButton"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="2dp" />
+
+    <Button
         android:id="@+id/weightGainButton"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:text="Weight gain"
-        android:background="@drawable/green_button_background"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/maintainWeightButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
+        android:layout_height="60dp"
         android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="@color/green_button"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Weight gain"
+        android:textColor="@android:color/white"
+        app:cornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/maintainWeightButton"
+        app:strokeColor="#FFFFFF"
+        app:strokeWidth="2dp" />
 
     <!-- Go Next button -->
     <Button
