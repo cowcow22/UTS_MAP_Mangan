@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UTS_MAP_Mangan"
         tools:targetApi="31">
+        <activity android:name=".WelcomePageHeightActivity" />
+        <activity android:name=".WelcomePageWeightActivity" />
         <activity android:name=".WelcomePageGoalsActivity" />
         <activity
             android:name=".WelcomePageNameActivity"
