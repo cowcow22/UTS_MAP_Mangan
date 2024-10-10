@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:text="What is your goal?"
         android:fontFamily="@font/poppins_bold"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,62 +39,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
-    <!-- Weight loss button -->
-    <Button
-        android:id="@+id/weightLossButton"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/green_button_background"
-        app:backgroundTint="@null"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Weight loss"
-        android:textColor="@android:color/white"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/subtitleTextView" />
-
-    <!-- Maintain weight button -->
-    <Button
-        android:id="@+id/maintainWeightButton"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/green_button_background"
-        app:backgroundTint="@null"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Maintain current weight"
-        android:textColor="@color/white"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weightLossButton" />
-
-    <!-- Weight gain button -->
-    <Button
-        android:id="@+id/weightGainButton"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/green_button_background"
-        app:backgroundTint="@null"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Weight gain"
-        android:textColor="@android:color/white"
-        app:cornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/maintainWeightButton" />
-
     <!-- Go Next button -->
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        app:layout_constraintTop_toBottomOf="@id/subtitleTextView"
+        tools:layout_editor_absoluteX="48dp">
+
+        <RadioButton
+            android:id="@+id/weightLossButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/green_button_background"
+            android:button="@null"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="Weight loss"
+            android:textColor="@android:color/white"
+            app:layout_constraintWidth_percent="0.33" />
+
+        <RadioButton
+            android:id="@+id/maintainWeightButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/green_button_background"
+            android:button="@null"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="Maintain current weight"
+            android:textColor="@android:color/white"
+            app:layout_constraintWidth_percent="0.33" />
+
+        <RadioButton
+            android:id="@+id/weightGainButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/green_button_background"
+            android:button="@null"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="Weight gain"
+            android:textColor="@android:color/white"
+            app:layout_constraintWidth_percent="0.33" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/btn_go_next"
         android:layout_width="180dp"
