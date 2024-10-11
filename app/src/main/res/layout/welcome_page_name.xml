@@ -81,10 +81,11 @@
 
     <Button
         android:id="@+id/btn_go_next"
-        android:layout_width="180dp"
-        android:layout_height="50dp"
+        android:layout_width="160dp"
+        android:layout_height="45dp"
+        android:background="@drawable/dark_button_design"
+        app:backgroundTint="@null"
         android:layout_marginBottom="88dp"
-        android:backgroundTint="#042628"
         android:fontFamily="@font/poppins_bold"
         android:text="Go Next"
         android:textAllCaps="false"
