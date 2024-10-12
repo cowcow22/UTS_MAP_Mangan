@@ -1,8 +1,11 @@
 package com.example.uts_map_mangan
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class WelcomePageGenderActivity : AppCompatActivity() {
@@ -27,6 +30,21 @@ class WelcomePageGenderActivity : AppCompatActivity() {
                 R.id.btn_female -> {
                     selectedButton.setBackgroundResource(R.drawable.female_button_selected)
                 }
+            }
+        }
+
+        // Menangani klik tombol "Go Next"
+        val btnGoNext = findViewById<Button>(R.id.btn_go_next)
+        btnGoNext.setOnClickListener {
+            // Pastikan ada RadioButton yang dipilih
+            val selectedId = radioGroup.checkedRadioButtonId
+            if (selectedId != -1) {
+                // Membuat Intent untuk membuka WelcomePageWeightActivity
+                val intent = Intent(this, WelcomePageBirthActivity::class.java)
+                startActivity(intent)
+            } else {
+                // Menampilkan pesan kesalahan jika tidak ada pilihan
+                Toast.makeText(this, "Please select a gender.", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,0 +1,10 @@
+<!-- res/values/styles.xml -->
+<resources>
+    <style name="PoppinsTextAppearance">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+</resources>
