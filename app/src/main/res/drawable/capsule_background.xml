@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF"/> <!-- Background color -->
+    <corners android:radius="50dp"/> <!-- Radius to make it look like a capsule -->
+    <stroke
+        android:width="2dp"
+        android:color="#D3D3D3" /> <!-- Optional: Border for the capsule -->
+</shape>

@@ -1,0 +1,51 @@
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:scrollbars="none"> <!-- Disabling the scrollbars -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"> <!-- Set orientation to horizontal for scrolling -->
+
+        <!-- Repeat the item layout for each diary entry -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:background="@drawable/background_gradient"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:id="@+id/imgDiaryItem"
+                android:layout_width="120dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_male" /> <!-- sementara aja -->
+
+            <TextView
+                android:id="@+id/tvDiaryItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food Name"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tvDiaryItemCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="120 Kcal"
+                android:textSize="12sp"
+                android:textColor="#666666" />
+
+        </LinearLayout>
+
+        <!-- Add more LinearLayouts for each diary item if needed -->
+
+    </LinearLayout>
+</HorizontalScrollView>
