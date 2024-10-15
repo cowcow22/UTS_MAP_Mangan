@@ -7,107 +7,90 @@
     android:background="@drawable/background_gradient"
     tools:context=".MainActivity">
 
+
     <!-- TextView for the subtitle -->
-    <!-- Adjust position -->
     <TextView
         android:id="@+id/app_subtitle"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="49dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="111dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="@font/poppins_regular"
         android:gravity="center"
         android:text="Help your path to health goals with happiness"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/google_sign_in_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_title" />
+        app:layout_constraintTop_toBottomOf="@+id/app_title" />
 
     <!-- TextView for "Mangan." -->
+
+    <!-- Button for Login -->
     <TextView
         android:id="@+id/app_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="316dp"
-        android:layout_marginBottom="8dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Mangan."
         android:textColor="@android:color/white"
         android:textSize="37sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/app_subtitle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Button for Login -->
-
-    <!-- TextView for Create a New Account -->
-
-    <!-- Button for Google Sign In-->
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32999998" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
         android:background="@drawable/dark_button_design"
         android:fontFamily="@font/poppins_bold"
         android:text="Login"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:backgroundTint="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/app_subtitle"
-        app:layout_constraintVertical_bias="0.494" />
+        app:layout_constraintTop_toBottomOf="@+id/google_sign_in_btn" />
 
+    ☻    <!-- Button for Google Sign In-->
     <Button
         android:id="@+id/google_sign_in_btn"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="36dp"
         android:background="@drawable/common_google_signin_btn_text_light"
         android:fontFamily="@font/poppins_bold"
         android:text="Sign In With Google"
         android:textAllCaps="false"
         android:textColor="@color/black"
         app:backgroundTint="@null"
-        app:layout_constraintBottom_toTopOf="@+id/btn_login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.988" />
+        app:layout_constraintTop_toBottomOf="@+id/app_subtitle" />
 
+    <!-- TextView for Create a New Account -->
     <Button
         android:id="@+id/btn_create_new_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/poppins_regular"
         android:text="Create a New Account"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toEndOf="@+id/btn_login"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@+id/btn_login"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login"
+        app:layout_constraintVertical_bias="0.14" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

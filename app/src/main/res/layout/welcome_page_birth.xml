@@ -12,83 +12,84 @@
         android:id="@+id/tv_your_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
         android:fontFamily="@font/poppins_bold"
+        android:gravity="center"
         android:text="What is your date of birth?"
         android:textColor="@android:color/white"
         android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"/>
+        app:layout_constraintVertical_bias="0.19999999" />
 
     <!-- Subtext: You can always change this later! -->
 
+    <!-- DatePicker -->
+
+    <!-- DatePicker -->
     <TextView
         android:id="@+id/tv_subtitle"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_regular"
         android:text="You can always change this later!"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_your_name" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_your_name" />
 
-    <!-- DatePicker -->
 
-    <!-- DatePicker -->
+    <!-- Button: Go Next -->
+
+    <!-- Button: Got an account? Sign In -->
+
     <DatePicker
         android:id="@+id/datePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/custom_date_picker"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
         android:padding="12dp"
         android:theme="@style/PoppinsTextAppearance"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_subtitle" />
-
-
-    <!-- Button: Go Next -->
+        app:layout_constraintTop_toBottomOf="@+id/tv_subtitle" />
 
     <Button
         android:id="@+id/btn_go_next"
-        android:layout_marginBottom="88dp"
         android:layout_width="160dp"
         android:layout_height="45dp"
         android:background="@drawable/dark_button_design"
-        app:backgroundTint="@null"
         android:fontFamily="@font/poppins_bold"
         android:text="Go Next"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
+        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Button: Got an account? Sign In -->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
 
     <TextView
         android:id="@+id/tv_sign_in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:fontFamily="@font/poppins_regular"
         android:text="Got an account? Sign In"
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/btn_go_next"
+        app:layout_constraintStart_toStartOf="@+id/btn_go_next"
+        app:layout_constraintTop_toBottomOf="@+id/btn_go_next"
+        app:layout_constraintVertical_bias="0.22000003" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
