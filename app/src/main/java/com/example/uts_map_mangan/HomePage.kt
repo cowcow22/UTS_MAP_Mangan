@@ -33,9 +33,22 @@ class HomePage : AppCompatActivity() {
                     // Handle home click
                     true
                 }
+                R.id.nav_diary -> {
+                    // Handle profile click
+                    startActivity(Intent(this, DiaryActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    true
+                }
+                R.id.nav_notification -> {
+                    // Handle profile click
+//                    startActivity(Intent(this, ProfileActivity::class.java))
+//                    overridePendingTransition(0, 0)
+                    true
+                }
                 R.id.nav_profile -> {
                     // Handle profile click
 //                    startActivity(Intent(this, ProfileActivity::class.java))
+//                    overridePendingTransition(0, 0)
                     true
                 }
                 else -> false
