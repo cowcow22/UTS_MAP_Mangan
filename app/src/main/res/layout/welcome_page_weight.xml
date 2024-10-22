@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_your_name" />
 
     <EditText
-        android:id="@+id/et_input_name"
+        android:id="@+id/et_input_weight"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

@@ -1,8 +1,10 @@
 package com.example.uts_map_mangan
 
+import User
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -11,10 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
 class WelcomePageGoalsActivity : AppCompatActivity() {
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.welcome_page_goals)
+
+        user = intent.getParcelableExtra("user")!!
 
         val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
 
@@ -28,6 +33,8 @@ class WelcomePageGoalsActivity : AppCompatActivity() {
             resetOtherButtons(checkedId)
         }
 
+        val name = intent.getStringExtra("name")
+
         // Menangani klik tombol "Go Next"
         val btnGoNext = findViewById<Button>(R.id.btn_go_next)
         btnGoNext.setOnClickListener {
@@ -35,7 +42,12 @@ class WelcomePageGoalsActivity : AppCompatActivity() {
             val selectedId = radioGroup.checkedRadioButtonId
             if (selectedId != -1) {
                 // Membuat Intent untuk membuka WelcomePageWeightActivity
+                val selectedButton = findViewById<RadioButton>(selectedId)
+                val goal = selectedButton.text.toString()
+                Log.d("WelcomePageGoalsActivity", "Goal: $goal")
+                user = user.copy(goal = goal)
                 val intent = Intent(this, WelcomePageWeightActivity::class.java)
+                intent.putExtra("user", user)
                 startActivity(intent)
             } else {
                 // Menampilkan pesan kesalahan jika tidak ada pilihan

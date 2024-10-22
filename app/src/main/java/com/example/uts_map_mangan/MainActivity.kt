@@ -15,36 +15,42 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
-    // Variable Declaration START
     private lateinit var googleSignInBtn: Button
     private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
 
     val RC_SIGN_IN = 20
-    // Variable Declaration END
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Check if user is already logged in
+        if (firebaseAuth.currentUser != null) {
+            val intent = Intent(this, BasePage::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+
         googleSignInBtn = findViewById(R.id.google_sign_in_btn)
         googleSignInBtn.setOnClickListener {
-            val gso: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
+            val gso: GoogleSignInOptions =
+                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
             val gsc: GoogleSignInClient = GoogleSignIn.getClient(this, gso)
             val signInIntent = gsc.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        // Menangani klik tombol "Create a New Account"
         val btnCreateNewAccount = findViewById<Button>(R.id.btn_create_new_account)
         btnCreateNewAccount.setOnClickListener {
-            // Membuat Intent untuk membuka WelcomePageNameActivity
             val intent = Intent(this, WelcomePageNameActivity::class.java)
             startActivity(intent)
         }
@@ -69,20 +75,38 @@ class MainActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
-                    val map = hashMapOf(
-                        "id" to user?.uid,
-                        "name" to user?.displayName,
-                        "profile" to user?.photoUrl.toString()
-                    )
-                    database.reference.child("Users").child(user?.uid!!)
-                        .updateChildren(map as Map<String, Any>)
-                    // HomePage bisa dibuah ke page lain
-                    val intent = Intent(this, HomePage::class.java)
-                    startActivity(intent)
+                    val firestore = FirebaseFirestore.getInstance()
+                    val userDocRef = firestore.collection("Users").document(user?.uid!!)
+
+                    userDocRef.get().addOnSuccessListener { document ->
+                        if (!document.exists() || document.getString("name") == null || document.getString(
+                                "profile"
+                            ) == null
+                        ) {
+                            // User document does not exist or is missing information, proceed to WelcomePageNameActivity
+                            val userMap = hashMapOf(
+                                "id" to user.uid,
+                                "name" to user.displayName,
+                                "profile" to user.photoUrl.toString()
+                            )
+                            userDocRef.set(userMap).addOnSuccessListener {
+                                val intent = Intent(this, WelcomePageNameActivity::class.java)
+                                startActivity(intent)
+                            }.addOnFailureListener { e ->
+                                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        } else {
+                            // User document exists and has necessary information, proceed to HomePage
+                            val intent = Intent(this, BasePage::class.java)
+                            startActivity(intent)
+                        }
+                    }.addOnFailureListener { e ->
+                        Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(this, "Error: Something went wrong!", Toast.LENGTH_SHORT).show()
                 }
             }
     }
-    // GOOGLE SIGN IN END
 }
