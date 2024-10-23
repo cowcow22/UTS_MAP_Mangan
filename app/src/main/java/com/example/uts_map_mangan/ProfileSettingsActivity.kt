@@ -196,6 +196,10 @@ class ProfileSettingsActivity : AppCompatActivity() {
             maintainWeightButton.requestLayout()
             weightGainButton.requestLayout()
         }
+
+        findViewById<Button>(R.id.back_button).setOnClickListener {
+            finish()
+        }
     }
 
     private fun showDatePickerDialog() {
