@@ -25,7 +25,6 @@ class WelcomePageBirthActivity : AppCompatActivity() {
         datePicker = findViewById(R.id.datePicker)
         user = intent.getParcelableExtra("user")!!
 
-
         val finishButton = findViewById<Button>(R.id.btn_go_next)
         finishButton.setOnClickListener {
             val day = datePicker.dayOfMonth
@@ -46,26 +45,35 @@ class WelcomePageBirthActivity : AppCompatActivity() {
 
     private fun saveUserData(user: User) {
         val currentUser = firebaseAuth.currentUser
+
+        if (currentUser == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val userMap = hashMapOf(
-            "id" to currentUser?.uid,
+            "id" to currentUser.uid,
             "name" to user.name,
             "goal" to user.goal,
             "weight" to user.weight,
             "height" to user.height,
             "gender" to user.gender,
             "birthDate" to user.birthDate,
-            "profile" to currentUser?.photoUrl.toString()
+            "profile" to currentUser.photoUrl.toString()
         )
 
         val firestore = FirebaseFirestore.getInstance()
-        firestore.collection("Users").document(currentUser?.uid!!)
+        firestore.collection("Users").document(currentUser.uid)
             .set(userMap)
             .addOnSuccessListener {
-                val intent = Intent(this, BasePage::class.java)
+                // Navigate to WelcomePageConfirmLoginActivity
+                val intent = Intent(this, WelcomePageConfirmLoginActivity::class.java)
                 startActivity(intent)
+                finish() // Optionally finish the current activity
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
 }
