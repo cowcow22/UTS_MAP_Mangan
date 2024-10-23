@@ -84,13 +84,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvName"
-        />
+        app:layout_constraintTop_toBottomOf="@id/tvName" />
 
     <Button
         android:id="@+id/btnShowMore"
@@ -100,7 +99,9 @@
         android:layout_marginStart="276dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="64dp"
+        android:background="@android:color/transparent"
         android:text="Show More"
+        android:textColor="@android:color/holo_blue_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSelectedDate" />
@@ -110,33 +111,30 @@
         android:id="@+id/TodaysMeal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
+        android:clickable="true"
+        android:focusable="true"
         android:fontFamily="@font/poppins_bold"
         android:text="Today's Meal"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@id/btnShowMore" />
 
     <TextView
         android:id="@+id/TodaysSnack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
         android:clickable="true"
         android:focusable="true"
         android:fontFamily="@font/poppins_bold"
         android:text="Today's Snacks"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/TodaysMeal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@id/btnShowMore" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -159,10 +157,24 @@
         android:id="@+id/btnShowInputDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Meal/Snack"
-        app:layout_constraintTop_toBottomOf="@id/recyclerViewMeal"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:text="Add Meal/Snack"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewMeal" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,7 @@
-<HorizontalScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:scrollbars="none"> <!-- Disabling the scrollbars -->
 
@@ -11,41 +11,98 @@
         android:orientation="horizontal"> <!-- Set orientation to horizontal for scrolling -->
 
         <!-- Repeat the item layout for each diary entry -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:background="@drawable/background_gradient"
+        <FrameLayout
+            android:layout_width="270dp"
+            android:layout_height="160dp"
             android:layout_marginEnd="8dp">
 
-            <ImageView
-                android:id="@+id/imgDiaryItem"
-                android:layout_width="160dp"
-                android:layout_height="80dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_male" /> <!-- sementara aja -->
+        <ImageView
+            android:id="@+id/imgDiaryItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/food_image_example"
+            android:background="@drawable/rounded_image_background"
+            android:clipToOutline="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rounded_overlay" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:gravity="bottom"> <!-- Align content to the bottom -->
 
             <TextView
                 android:id="@+id/tvDiaryItemName"
-                android:layout_width="wrap_content"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:text="Food Name"
                 android:fontFamily="@font/poppins_bold"
+                android:text="Asian white noodle with extra seafood"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF" />
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvDiaryItemCalories"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_regular"
-                android:text="120 Kcal"
-                android:textSize="12sp"
-                android:textColor="#FFFFFF" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_fire"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tvDiaryItemCalories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="120 Kcal"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_clock"
+                        app:tint="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tvDiaryItemTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="13:00 PM"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
+    </FrameLayout>
 
         <!-- Add more LinearLayouts for each diary item if needed -->
 
