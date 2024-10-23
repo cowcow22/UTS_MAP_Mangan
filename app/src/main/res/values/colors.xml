@@ -8,4 +8,7 @@
     <color name="male_color">#2986cc</color>
     <color name="female_color">#FFC0CB</color>
     <color name="gray">#808080</color>
+    <color name="dongker">#042628</color>
+    <color name="drink">#36C8F6</color>
+    <color name="eat">#679436</color>
 </resources>

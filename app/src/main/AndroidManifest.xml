@@ -21,7 +21,8 @@
         <activity android:name=".WelcomePageHeightActivity" />
         <activity android:name=".WelcomePageWeightActivity" />
         <activity android:name=".WelcomePageGoalsActivity" />
-        <activity android:name=".DiaryActivity" />
+        <activity android:name=".DiaryFragment" />
+        <activity android:name=".NotificationFragment" />
         <activity
             android:name=".WelcomePageNameActivity"
             android:exported="false" />

@@ -46,6 +46,7 @@ class BasePage : AppCompatActivity() {
 
                 R.id.nav_notification -> {
                     // Handle notification click
+                    switchFragment(NotificationFragment())
                     true
                 }
 
