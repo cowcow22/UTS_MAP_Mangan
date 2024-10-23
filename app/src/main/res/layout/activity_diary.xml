@@ -60,6 +60,7 @@
         app:shapeAppearanceOverlay="@style/CircleImageView" />
 
     <!-- CalendarView dan Button Show Less/More  -->
+
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
@@ -67,12 +68,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_calendar_background"
         android:dateTextAppearance="@style/CalendarDateTextAppearance"
-        android:focusedMonthDateColor="@color/black"
-        android:selectedDateVerticalBar="@color/black"
         android:theme="@style/CustomCalendarView"
         android:weekDayTextAppearance="@style/CalendarCurrentDateTextAppearance"
-        android:weekNumberColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvName" />
@@ -158,8 +157,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="#A5BE00"
         android:text="Add Meal/Snack"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        android:fontFamily="@font/poppins_bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewMeal" />
 

@@ -47,7 +47,7 @@
         android:id="@+id/et_input_height"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="26dp"
         android:background="@drawable/edit_text_background"
         android:fontFamily="@font/poppins_regular"
         android:hint="Input here (CM)"
@@ -60,22 +60,22 @@
         app:layout_constraintStart_toStartOf="@+id/tv_subtitle"
         app:layout_constraintTop_toBottomOf="@+id/tv_subtitle" />
 
+    <!-- Button: Go Next -->
+
+    <!-- Button: Got an account? Sign In -->
+
     <TextView
         android:id="@+id/tv_privacy_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_regular"
         android:text="This information is for BMI calculation."
         android:textColor="@android:color/white"
         android:textSize="12sp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_input_name" />
-
-    <!-- Button: Go Next -->
-
-    <!-- Button: Got an account? Sign In -->
+        app:layout_constraintTop_toBottomOf="@+id/et_input_height" />
 
     <Button
         android:id="@+id/btn_go_next"
@@ -92,7 +92,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_privacy_info" />
+        app:layout_constraintTop_toBottomOf="@+id/et_input_height" />
 
     <TextView
         android:id="@+id/tv_sign_in"
