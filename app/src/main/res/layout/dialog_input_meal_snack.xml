@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editMealName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Meal/Snack Name" />
+
+    <EditText
+        android:id="@+id/editCalories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Calories"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/editTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Time (HH:MM)" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupMealType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioMeal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meal" />
+
+        <RadioButton
+            android:id="@+id/radioSnack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Snack" />
+    </RadioGroup>
+</LinearLayout>

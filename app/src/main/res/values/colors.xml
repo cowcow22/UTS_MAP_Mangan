@@ -7,4 +7,5 @@
     <color name="green_button">#679436</color>
     <color name="male_color">#2986cc</color>
     <color name="female_color">#FFC0CB</color>
+    <color name="gray">#808080</color>
 </resources>
