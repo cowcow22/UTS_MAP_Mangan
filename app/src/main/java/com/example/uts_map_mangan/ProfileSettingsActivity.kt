@@ -12,10 +12,12 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -47,7 +49,8 @@ class ProfileSettingsActivity : AppCompatActivity() {
         nameInput = findViewById(R.id.name_input)
         birthDateInput = findViewById(R.id.birth_date_input)
         profileImage = findViewById(R.id.profile_image)
-        uploadProgressBar = findViewById(R.id.upload_progress_bar)
+        uploadProgressBar = findViewById(R.id.uploadProgressBar)
+
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
@@ -143,22 +146,55 @@ class ProfileSettingsActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         // Cache the values in SharedPreferences
                         with(sharedPreferences.edit()) {
-                            putString("name", name)
-                            putString("birthDate", birthDate)
                             putString("gender", selectedGender)
                             putString("goal", selectedGoal)
+                            putString("name", name)
+                            putString("birthDate", birthDate)
                             apply()
                         }
-                        Toast.makeText(
-                            this,
-                            "Settings saved: Gender - $selectedGender, Goal - $selectedGoal",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this, "Profile updated", Toast.LENGTH_SHORT).show()
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             }
+        }
+
+        // Adjust layout weight based on selection
+        goalToggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            val selectedWeight = 2f
+            val unselectedWeight = 1f
+
+            val weightLossButton = findViewById<MaterialButton>(R.id.goal_weight_loss)
+            val maintainWeightButton = findViewById<MaterialButton>(R.id.goal_maintain_weight)
+            val weightGainButton = findViewById<MaterialButton>(R.id.goal_weight_gain)
+
+            when (checkedId) {
+                R.id.goal_weight_loss -> {
+                    weightLossButton.layoutParams =
+                        (weightLossButton.layoutParams as LinearLayout.LayoutParams).apply {
+                            weight = if (isChecked) selectedWeight else unselectedWeight
+                        }
+                }
+
+                R.id.goal_maintain_weight -> {
+                    maintainWeightButton.layoutParams =
+                        (maintainWeightButton.layoutParams as LinearLayout.LayoutParams).apply {
+                            weight = if (isChecked) selectedWeight else unselectedWeight
+                        }
+                }
+
+                R.id.goal_weight_gain -> {
+                    weightGainButton.layoutParams =
+                        (weightGainButton.layoutParams as LinearLayout.LayoutParams).apply {
+                            weight = if (isChecked) selectedWeight else unselectedWeight
+                        }
+                }
+            }
+            // Refresh the layout to apply the changes
+            weightLossButton.requestLayout()
+            maintainWeightButton.requestLayout()
+            weightGainButton.requestLayout()
         }
     }
 
@@ -214,7 +250,6 @@ class ProfileSettingsActivity : AppCompatActivity() {
                                 Glide.with(this).load(profilePictureUrl).into(profileImage)
                                 uploadProgressBar.visibility = View.GONE
                                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                                // Cache the profile picture URL in SharedPreferences
                                 with(sharedPreferences.edit()) {
                                     putString("profileUrl", profilePictureUrl)
                                     apply()
