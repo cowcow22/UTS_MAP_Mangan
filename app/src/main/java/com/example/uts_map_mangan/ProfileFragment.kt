@@ -35,6 +35,7 @@ class ProfileFragment : Fragment() {
     private lateinit var generalSettingsButton: Button
     private lateinit var notificationSettingsButton: Button
     private lateinit var feedbackButton: Button
+    private lateinit var removeAdsButton: Button
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
@@ -64,6 +65,7 @@ class ProfileFragment : Fragment() {
         generalSettingsButton = view.findViewById(R.id.general_settings_button)
         notificationSettingsButton = view.findViewById(R.id.notification_settings_button)
         feedbackButton = view.findViewById(R.id.feedback_button)
+        removeAdsButton = view.findViewById(R.id.remove_ads_button)
 
         // Retrieve user data from SharedPreferences
         val cachedName = sharedPreferences.getString("name", null)
@@ -145,6 +147,12 @@ class ProfileFragment : Fragment() {
         // Handle feedback settings button click
         feedbackButton.setOnClickListener {
             val intent = Intent(activity, FeedbackSettingsActivity::class.java)
+            startActivityForResult(intent, PROFILE_SETTINGS_REQUEST_CODE)
+        }
+
+        // Handle feedback settings button click
+        removeAdsButton.setOnClickListener {
+            val intent = Intent(activity, RemoveAdsActivity::class.java)
             startActivityForResult(intent, PROFILE_SETTINGS_REQUEST_CODE)
         }
     }

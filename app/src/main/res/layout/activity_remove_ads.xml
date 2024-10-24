@@ -30,7 +30,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/back_button_notification"
+                android:id="@+id/back_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center|start"

@@ -2,6 +2,7 @@ package com.example.uts_map_mangan
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -79,14 +80,18 @@ class DiaryFragment : Fragment() {
         calendarView.visibility = View.GONE
 
         // Set tanggal default ke hari ini
-        val currentDate = java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", java.util.Locale.getDefault()).format(java.util.Date())
+        val currentDate =
+            java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", java.util.Locale.getDefault())
+                .format(java.util.Date())
         tvSelectedDate.text = currentDate
 
         // Update tanggal saat tanggal di CalendarView berubah
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = java.util.Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
-            val selectedDate = java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", java.util.Locale.getDefault()).format(calendar.time)
+            val selectedDate =
+                java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", java.util.Locale.getDefault())
+                    .format(calendar.time)
             tvSelectedDate.text = selectedDate
         }
 
@@ -157,67 +162,7 @@ class DiaryFragment : Fragment() {
 
     // INI BUAT MEAL DAN SNACK
     private fun showInputDialog() {
-        // Inflate the dialog layout
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_input_meal_snack, null)
-
-        // Initialize EditText fields and RadioGroup from the dialog layout
-        val editMealName: EditText = dialogView.findViewById(R.id.editMealName)
-        val editCalories: EditText = dialogView.findViewById(R.id.editCalories)
-        val editTime: EditText = dialogView.findViewById(R.id.editTime)
-        val radioGroupMealType: RadioGroup = dialogView.findViewById(R.id.radioGroupMealType)
-
-        // Create an AlertDialog
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Add Meal/Snack")
-            .setView(dialogView)
-            .setPositiveButton("Add") { _, _ ->
-                // Validate and add data when the user clicks "Add"
-                addMealOrSnack(editMealName, editCalories, editTime, radioGroupMealType)
-            }
-            .setNegativeButton("Cancel", null)
-            .create()
-
-        dialog.show()
-    }
-
-    private fun addMealOrSnack(
-        editMealName: EditText,
-        editCalories: EditText,
-        editTime: EditText,
-        radioGroupMealType: RadioGroup
-    ) {
-        val mealName = editMealName.text.toString().trim()
-        val calories = editCalories.text.toString().toLongOrNull()
-        val time = editTime.text.toString().trim()
-        val isMeal = radioGroupMealType.checkedRadioButtonId == R.id.radioMeal
-
-        if (mealName.isEmpty() || calories == null || time.isEmpty()) {
-            Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Your existing Firestore logic to add the meal/snack
-        val user = firebaseAuth.currentUser
-        user?.uid?.let { uid ->
-            val mealData = hashMapOf(
-                "mealName" to mealName,
-                "calories" to calories,
-                "time" to time,
-                "isMeal" to isMeal
-            )
-
-            firestore.collection("Users").document(uid).collection("MealsAndSnacks")
-                .add(mealData)
-                .addOnSuccessListener {
-                    Toast.makeText(context, "Meal/Snack added successfully", Toast.LENGTH_SHORT).show()
-                    editMealName.text.clear()
-                    editCalories.text.clear()
-                    editTime.text.clear()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(context, "Error adding meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-        }
+        startActivity(Intent(requireContext(), InputMealSnackActivity::class.java))
     }
 
     // INI BUAT FETCH USER
