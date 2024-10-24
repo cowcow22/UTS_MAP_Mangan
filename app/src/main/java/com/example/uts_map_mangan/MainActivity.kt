@@ -31,9 +31,25 @@ class MainActivity : AppCompatActivity() {
 
         // Check if user is already logged in
         if (firebaseAuth.currentUser != null) {
-            val intent = Intent(this, BasePage::class.java)
-            startActivity(intent)
-            finish()
+            val user = firebaseAuth.currentUser
+            val firestore = FirebaseFirestore.getInstance()
+            val userDocRef = firestore.collection("Users").document(user?.uid!!)
+
+            userDocRef.get().addOnSuccessListener { document ->
+                if (!document.exists() || document.getString("name") == null || document.getString("profile") == null) {
+                    // User document does not exist or is missing information, proceed to WelcomePageNameActivity
+                    val intent = Intent(this, WelcomePageNameActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // User document exists and has necessary information, proceed to BasePage
+                    val intent = Intent(this, BasePage::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }.addOnFailureListener { e ->
+                Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
             return
         }
 
@@ -49,11 +65,7 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        val btnCreateNewAccount = findViewById<Button>(R.id.btn_create_new_account)
-        btnCreateNewAccount.setOnClickListener {
-            val intent = Intent(this, WelcomePageNameActivity::class.java)
-            startActivity(intent)
-        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -86,7 +98,6 @@ class MainActivity : AppCompatActivity() {
                             // User document does not exist or is missing information, proceed to WelcomePageNameActivity
                             val userMap = hashMapOf(
                                 "id" to user.uid,
-                                "name" to user.displayName,
                                 "profile" to user.photoUrl.toString()
                             )
                             userDocRef.set(userMap).addOnSuccessListener {

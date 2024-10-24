@@ -58,7 +58,7 @@
             android:button="@null"
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
-            android:text="Weight loss"
+            android:text="Weight Loss"
             android:textColor="@android:color/white"
             app:layout_constraintWidth_percent="0.33" />
 
@@ -71,7 +71,7 @@
             android:button="@null"
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
-            android:text="Maintain current weight"
+            android:text="Maintain Weight"
             android:textColor="@android:color/white"
             app:layout_constraintWidth_percent="0.33" />
 
@@ -84,7 +84,7 @@
             android:button="@null"
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
-            android:text="Weight gain"
+            android:text="Weight Gain"
             android:textColor="@android:color/white"
             app:layout_constraintWidth_percent="0.33" />
     </RadioGroup>
@@ -106,20 +106,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-    <TextView
-        android:id="@+id/tv_sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:text="Got an account? Sign In"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btn_go_next"
-        app:layout_constraintStart_toStartOf="@+id/btn_go_next"
-        app:layout_constraintTop_toBottomOf="@+id/btn_go_next"
-        app:layout_constraintVertical_bias="0.223" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

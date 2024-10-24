@@ -198,6 +198,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.back_button).setOnClickListener {
+            setResult(Activity.RESULT_OK)
             finish()
         }
     }

@@ -51,6 +51,10 @@ class WelcomePageBirthActivity : AppCompatActivity() {
             return
         }
 
+        val height = user.height?.toFloat() ?: 0f
+        val weight = user.weight?.toFloat() ?: 0f
+        val bmi = if (height != 0f) weight * 10000 / (height * height) else 0f
+
         val userMap = hashMapOf(
             "id" to currentUser.uid,
             "name" to user.name,
@@ -59,7 +63,8 @@ class WelcomePageBirthActivity : AppCompatActivity() {
             "height" to user.height,
             "gender" to user.gender,
             "birthDate" to user.birthDate,
-            "profile" to currentUser.photoUrl.toString()
+            "profile" to currentUser.photoUrl.toString(),
+            "bmi" to bmi
         )
 
         val firestore = FirebaseFirestore.getInstance()
@@ -67,7 +72,7 @@ class WelcomePageBirthActivity : AppCompatActivity() {
             .set(userMap)
             .addOnSuccessListener {
                 // Navigate to WelcomePageConfirmLoginActivity
-                val intent = Intent(this, WelcomePageConfirmLoginActivity::class.java)
+                val intent = Intent(this, BasePage::class.java)
                 startActivity(intent)
                 finish() // Optionally finish the current activity
             }

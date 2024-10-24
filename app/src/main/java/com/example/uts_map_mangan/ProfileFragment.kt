@@ -14,6 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -98,11 +100,22 @@ class ProfileFragment : Fragment() {
         // Set email from Firebase Authentication
         profileEmail.text = user?.email
 
+
         // Handle logout
         logoutButton.setOnClickListener {
+            // Clear SharedPreferences
+            sharedPreferences.edit().clear().apply()
+            // Revoke authentication
             firebaseAuth.signOut()
-            startActivity(Intent(activity, MainActivity::class.java))
-            activity?.finish()
+            val googleSignInClient = GoogleSignIn.getClient(
+                requireActivity(),
+                GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+            )
+            googleSignInClient.revokeAccess().addOnCompleteListener {
+                // Redirect to MainActivity
+                startActivity(Intent(activity, MainActivity::class.java))
+                activity?.finish()
+            }
         }
 
         // Handle profile settings button click
