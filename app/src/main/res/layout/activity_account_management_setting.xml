@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF"
+    tools:context=".AccountManagementSetting">
+
+    <LinearLayout
+        android:id="@+id/feedback_setting_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="start|center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/back_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center|start"
+                android:backgroundTint="#FFFFFF"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingRight="16dp"
+                android:textAllCaps="false"
+                app:cornerRadius="0dp"
+                app:icon="@drawable/back_arrow_ic"
+                app:iconGravity="end"
+                app:iconTint="#000000" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="40dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Account Management"
+                android:textAlignment="center"
+                android:textColor="#0A2533"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/preferences_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="31dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/rounded_background"
+            android:backgroundTint="#FFFFFF"
+            android:elevation="4dp"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:paddingStart="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_marginStart="9dp"
+                android:gravity="start"
+                android:orientation="vertical"
+                android:paddingStart="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/account_type_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1.5"
+                        android:fontFamily="@font/poppins_regular"
+                        android:paddingStart="8dp"
+                        android:text="Account Type"
+                        android:textAlignment="viewStart"
+                        android:textColor="#0A2533"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/account_type_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/poppins_regular"
+                        android:singleLine="true"
+                        android:text="Free"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#427AA1"
+                        android:textSize="15dp"
+                        tools:layout_editor_absoluteY="276dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="right"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="#D6D6D6" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/email_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1.5"
+                        android:fontFamily="@font/poppins_regular"
+                        android:paddingStart="8dp"
+                        android:text="Email"
+                        android:textAlignment="viewStart"
+                        android:textColor="#0A2533"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/email_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/poppins_regular"
+                        android:singleLine="true"
+                        android:text="example@example.com"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#427AA1"
+                        android:textSize="15dp"
+                        tools:layout_editor_absoluteY="276dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="right"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="#D6D6D6" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/password_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1.5"
+                        android:fontFamily="@font/poppins_regular"
+                        android:paddingStart="8dp"
+                        android:text="Password"
+                        android:textAlignment="viewStart"
+                        android:textColor="#0A2533"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/password_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/poppins_regular"
+                        android:singleLine="true"
+                        android:text="*********"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#427AA1"
+                        android:textSize="15dp"
+                        tools:layout_editor_absoluteY="276dp" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line6"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="right"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="17dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="#D6D6D6" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <TextView
+                        android:id="@+id/google_account_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1.5"
+                        android:fontFamily="@font/poppins_regular"
+                        android:paddingStart="8dp"
+                        android:text="Google Acc"
+                        android:textAlignment="viewStart"
+                        android:textColor="#0A2533"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/google_account_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/poppins_regular"
+                        android:singleLine="true"
+                        android:text="google@gmail.com"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#427AA1"
+                        android:textSize="15dp"
+                        tools:layout_editor_absoluteY="276dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/preferences_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/rounded_background"
+            android:backgroundTint="#FF0000"
+            android:elevation="4dp"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:paddingStart="4dp">
+
+            <TextView
+                android:id="@+id/account_type_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginBottom="4dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
+                android:paddingStart="8dp"
+                android:text="Delete Account"
+                android:textAlignment="viewStart"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="44dp"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FFFFFF"
+                android:fontFamily="@font/poppins_bold"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingEnd="0dp"
+                android:paddingBottom="0dp"
+                android:text="Delete"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="#FF0000"
+                android:textSize="12sp"
+                app:cornerRadius="13dp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
