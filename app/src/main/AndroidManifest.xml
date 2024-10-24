@@ -27,6 +27,7 @@
         <activity android:name=".WelcomePageGoalsActivity" />
         <activity android:name=".GeneralSettingsActivity" />
         <activity android:name=".NotificationSettingsActivity" />
+        <activity android:name=".FeedbackSettingsActivity" />
         <activity android:name=".DiaryFragment" />
         <activity android:name=".NotificationFragment" />
         <activity
