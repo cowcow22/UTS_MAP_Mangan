@@ -32,6 +32,7 @@ class ProfileFragment : Fragment() {
     private lateinit var profileEmail: TextView
     private lateinit var logoutButton: Button
     private lateinit var profileSettingsButton: Button
+    private lateinit var generalSettingsButton: Button
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
@@ -58,6 +59,7 @@ class ProfileFragment : Fragment() {
         profileEmail = view.findViewById(R.id.profile_email)
         logoutButton = view.findViewById(R.id.logout_button)
         profileSettingsButton = view.findViewById(R.id.profile_settings_button)
+        generalSettingsButton = view.findViewById(R.id.general_settings_button)
 
         // Retrieve user data from SharedPreferences
         val cachedName = sharedPreferences.getString("name", null)
@@ -121,6 +123,12 @@ class ProfileFragment : Fragment() {
         // Handle profile settings button click
         profileSettingsButton.setOnClickListener {
             val intent = Intent(activity, ProfileSettingsActivity::class.java)
+            startActivityForResult(intent, PROFILE_SETTINGS_REQUEST_CODE)
+        }
+
+        // Handle general settings button click
+        generalSettingsButton.setOnClickListener {
+            val intent = Intent(activity, GeneralSettingsActivity::class.java)
             startActivityForResult(intent, PROFILE_SETTINGS_REQUEST_CODE)
         }
     }
