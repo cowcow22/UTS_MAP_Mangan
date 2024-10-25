@@ -243,7 +243,7 @@
 
                     <TextView
                         android:id="@+id/name_title"
-                        android:layout_width="110dp"
+                        android:layout_width="113dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start|center_vertical"
                         android:layout_marginRight="0dp"
@@ -257,9 +257,9 @@
 
                     <EditText
                         android:id="@+id/name_input"
-                        android:layout_width="match_parent"
+                        android:layout_width="135dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|end"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:background="@null"
                         android:fontFamily="@font/poppins_light"
@@ -272,7 +272,7 @@
 
                     <ImageView
                         android:id="@+id/pencil_1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="3dp"
                         android:layout_height="15dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="5dp"
@@ -295,7 +295,7 @@
                 <LinearLayout
                     android:id="@+id/profile_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="41dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:clipToPadding="false"
                     android:orientation="horizontal"
@@ -322,7 +322,7 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/profile_image"
                         android:layout_width="36dp"
-                        android:layout_height="36dp"
+                        android:layout_height="45dp"
                         android:layout_gravity="center_vertical|end"
                         android:layout_marginStart="16dp"
                         android:layout_weight="0.2"
@@ -415,21 +415,23 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:text="Save"
-            tools:layout_editor_absoluteX="162dp"
-            tools:layout_editor_absoluteY="478dp" />
-
         <ProgressBar
             android:id="@+id/uploadProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone" />
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#A5BE00"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Save"
+            tools:layout_editor_absoluteX="162dp"
+            tools:layout_editor_absoluteY="478dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

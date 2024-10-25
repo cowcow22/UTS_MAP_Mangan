@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
+    android:background="@drawable/backgroud_welcome_img"
     android:padding="16dp">
 
     <!-- Title: What is your date of birth? -->
