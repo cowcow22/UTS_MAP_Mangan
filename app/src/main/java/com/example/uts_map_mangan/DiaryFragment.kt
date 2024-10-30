@@ -21,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class DiaryFragment : Fragment() {
 
@@ -203,9 +205,14 @@ class DiaryFragment : Fragment() {
             .get()
             .addOnSuccessListener { result ->
                 diaryList.clear()
+                val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
                 for (document in result) {
                     val diary = document.toObject(DiaryEntryClass::class.java)
                     diaryList.add(diary)
+                }
+                // Sort the list by the time attribute
+                diaryList.sortBy { diary ->
+                    dateFormat.parse(diary.time)
                 }
                 isLoading = false
                 filterDiaries()

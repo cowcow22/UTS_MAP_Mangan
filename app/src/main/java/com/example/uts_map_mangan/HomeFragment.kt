@@ -151,10 +151,15 @@ class HomeFragment : Fragment() {
             .addOnSuccessListener { result ->
                 val newDiaryList = mutableListOf<DiaryEntryClass>()
                 var totalCalories = 0L
+                val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
                 for (document in result) {
                     val diary = document.toObject(DiaryEntryClass::class.java)
                     newDiaryList.add(diary)
                     totalCalories += diary.calories
+                }
+                // Sort the list by the time attribute
+                newDiaryList.sortBy { diary ->
+                    dateFormat.parse(diary.time)
                 }
                 tvTotalCalories.text = "Total Calories of Today: ${totalCalories} cal"
                 diaryAdapter.updateList(newDiaryList)
