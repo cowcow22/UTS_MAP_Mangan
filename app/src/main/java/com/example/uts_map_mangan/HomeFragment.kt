@@ -145,6 +145,7 @@ class HomeFragment : Fragment() {
         val endOfDay = calendar.time
 
         firestore.collection("meals_snacks")
+            .whereEqualTo("accountId", firebaseAuth.currentUser?.uid)
             .whereGreaterThanOrEqualTo("timestamp", startOfDay)
             .whereLessThanOrEqualTo("timestamp", endOfDay)
             .get()

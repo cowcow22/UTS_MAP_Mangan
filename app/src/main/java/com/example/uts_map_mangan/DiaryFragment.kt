@@ -201,25 +201,29 @@ class DiaryFragment : Fragment() {
     }
 
     private fun fetchDiaries() {
-        firestore.collection("meals_snacks")
-            .get()
-            .addOnSuccessListener { result ->
-                diaryList.clear()
-                val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-                for (document in result) {
-                    val diary = document.toObject(DiaryEntryClass::class.java)
-                    diaryList.add(diary)
+        val user = firebaseAuth.currentUser
+        user?.uid?.let { uid ->
+            firestore.collection("meals_snacks")
+                .whereEqualTo("accountId", uid)
+                .get()
+                .addOnSuccessListener { result ->
+                    diaryList.clear()
+                    val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                    for (document in result) {
+                        val diary = document.toObject(DiaryEntryClass::class.java)
+                        diaryList.add(diary)
+                    }
+                    // Sort the list by the time attribute
+                    diaryList.sortBy { diary ->
+                        dateFormat.parse(diary.time)
+                    }
+                    isLoading = false
+                    filterDiaries()
                 }
-                // Sort the list by the time attribute
-                diaryList.sortBy { diary ->
-                    dateFormat.parse(diary.time)
+                .addOnFailureListener { exception ->
+                    Log.w("DiaryFragment", "Error getting documents: ", exception)
                 }
-                isLoading = false
-                filterDiaries()
-            }
-            .addOnFailureListener { exception ->
-                Log.w("DiaryFragment", "Error getting documents: ", exception)
-            }
+        }
     }
 
     private fun filterDiaries() {
