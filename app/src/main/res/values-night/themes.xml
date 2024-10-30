@@ -11,4 +11,9 @@
         <item name="android:color">#A5BE00</item>
         <item name="android:background">@android:color/white</item>
     </style>
+    <style name="ShapeAppearanceOverlay.RoundedImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
 </resources>

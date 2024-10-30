@@ -7,6 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 class DiaryAdapter(private var diaryList: List<DiaryEntryClass>, private var isLoading: Boolean) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -54,8 +57,9 @@ class DiaryAdapter(private var diaryList: List<DiaryEntryClass>, private var isL
         val tvDiaryItemTime: TextView = view.findViewById(R.id.tvDiaryItemTime)
 
         fun bind(diary: DiaryEntryClass) {
-            Glide.with(itemView.context)
+            Glide.with(imgDiaryItem.context)
                 .load(diary.pictureUrl)
+                .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(16)))
                 .into(imgDiaryItem)
             tvDiaryItemName.text = diary.name
             tvDiaryItemCalories.text = diary.calories.toString()
