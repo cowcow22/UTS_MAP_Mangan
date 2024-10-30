@@ -1,23 +1,23 @@
 package com.example.uts_map_mangan
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CalendarView
-import android.widget.EditText
 import android.widget.ImageView
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,6 +34,12 @@ class DiaryFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private lateinit var btnShowInputDialog: Button
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var diaryAdapter: DiaryAdapter
+    private val diaryList = mutableListOf<DiaryEntryClass>()
+    private var selectedDate: String = ""
+    private var selectedCategory: String = "Meal"
+    private var isLoading = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +57,15 @@ class DiaryFragment : Fragment() {
         profileImage = view.findViewById(R.id.imgAvatar)
         profileName = view.findViewById(R.id.tvName)
         btnShowInputDialog = view.findViewById(R.id.btnShowInputDialog)
+        recyclerView = view.findViewById(R.id.recyclerViewMeal)
 
         // Initialize SharedPreferences
         sharedPreferences =
             requireActivity().getSharedPreferences("UserProfile", Context.MODE_PRIVATE)
+
+        // Initialize Firebase Auth and Firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         // Retrieve user data from SharedPreferences
         val cachedName = sharedPreferences.getString("name", null)
@@ -72,100 +83,83 @@ class DiaryFragment : Fragment() {
             fetchUserDataFromFirebase()
         }
 
-        // INI BUAT KALENDER
-        // Set the date text appearance to always be black
+        // Initialize RecyclerView
+        recyclerView.layoutManager =
+            LinearLayoutManager(context)
+        diaryAdapter = DiaryAdapter(diaryList, isLoading)
+        recyclerView.adapter = diaryAdapter
+
+        // Fetch diary entries from Firestore
+        fetchDiaries()
+
+        // Calendar setup
         calendarView.setDateTextAppearance(R.style.CustomCalendarView)
-
-        // Default CalendarView disembunyikan
         calendarView.visibility = View.GONE
-
-        // Set tanggal default ke hari ini
         val currentDate =
             java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", java.util.Locale.getDefault())
                 .format(java.util.Date())
         tvSelectedDate.text = currentDate
+        selectedDate = currentDate
 
-        // Update tanggal saat tanggal di CalendarView berubah
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = java.util.Calendar.getInstance()
             calendar.set(year, month, dayOfMonth)
-            val selectedDate =
+            val selectedDateFormatted =
                 java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", java.util.Locale.getDefault())
                     .format(calendar.time)
-            tvSelectedDate.text = selectedDate
+            tvSelectedDate.text = selectedDateFormatted
+            selectedDate = selectedDateFormatted
+            filterDiaries()
         }
 
-        // Mengatur aksi tombol Show Less / Show More
         btnShowMore.setOnClickListener {
             if (!isCalendarExpanded) {
-                // Menampilkan CalendarView dan menyembunyikan TextView
-                calendarView.visibility = View.VISIBLE // Show CalendarView
-                tvSelectedDate.visibility = View.GONE // Keep this as GONE
-                btnShowMore.text = "Show Less" // Update button text
-
-                // Update button position constraints
+                calendarView.visibility = View.VISIBLE
+                tvSelectedDate.visibility = View.GONE
+                btnShowMore.text = "Show Less"
                 val params = btnShowMore.layoutParams as ConstraintLayout.LayoutParams
-                params.topToBottom = calendarView.id // Set btnShowMore to be below calendarView
+                params.topToBottom = calendarView.id
                 btnShowMore.layoutParams = params
             } else {
-                // Menyembunyikan CalendarView dan menampilkan TextView
-                calendarView.visibility = View.GONE // Hide CalendarView
-                tvSelectedDate.visibility = View.VISIBLE // Show TextView
-                btnShowMore.text = "Show More" // Update button text
-
-                // Update button position constraints
+                calendarView.visibility = View.GONE
+                tvSelectedDate.visibility = View.VISIBLE
+                btnShowMore.text = "Show More"
                 val params = btnShowMore.layoutParams as ConstraintLayout.LayoutParams
-                params.topToBottom = tvSelectedDate.id // Set btnShowMore to be below tvSelectedDate
+                params.topToBottom = tvSelectedDate.id
                 btnShowMore.layoutParams = params
             }
-            isCalendarExpanded = !isCalendarExpanded // Toggle the boolean
+            isCalendarExpanded = !isCalendarExpanded
         }
 
-        // INI BUAT MEAL DAN SNACK
-        // Inside your onCreateView or onViewCreated method
+        // Meal and Snack setup
         val todaysMeal = view.findViewById<TextView>(R.id.TodaysMeal)
         val todaysSnack = view.findViewById<TextView>(R.id.TodaysSnack)
 
-        // Set onClickListener for the button to show the input dialog
         btnShowInputDialog.setOnClickListener {
             showInputDialog()
         }
 
-        // Set the initial color of Today's Snacks to gray
         todaysSnack.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
 
-        // Set click listener for Today's Meal
         todaysMeal.setOnClickListener {
-            // Change the text color of Today's Meal to black
             todaysMeal.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-
-            // Reset the color of Today's Snacks to gray
             todaysSnack.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-
-            // Optionally, handle additional actions for Today's Meal click
-            Toast.makeText(context, "Today's Meal clicked", Toast.LENGTH_SHORT).show()
+            selectedCategory = "Meal"
+            filterDiaries()
         }
 
-        // Set click listener for Today's Snacks
         todaysSnack.setOnClickListener {
-            // Change the text color of Today's Snacks to black
             todaysSnack.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-
-            // Reset the color of Today's Meal to gray
             todaysMeal.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
-
-            // Handle Today's Snacks click
-            Toast.makeText(context, "Today's Snacks clicked", Toast.LENGTH_SHORT).show()
+            selectedCategory = "Snack"
+            filterDiaries()
         }
-
     }
 
-    // INI BUAT MEAL DAN SNACK
     private fun showInputDialog() {
         startActivity(Intent(requireContext(), InputMealSnackActivity::class.java))
     }
 
-    // INI BUAT FETCH USER
     private fun fetchUserDataFromFirebase() {
         val user = firebaseAuth.currentUser
         user?.uid?.let { uid ->
@@ -194,8 +188,33 @@ class DiaryFragment : Fragment() {
         }
     }
 
+    private fun fetchDiaries() {
+        firestore.collection("meals_snacks")
+            .get()
+            .addOnSuccessListener { result ->
+                diaryList.clear()
+                for (document in result) {
+                    val diary = document.toObject(DiaryEntryClass::class.java)
+                    diaryList.add(diary)
+                }
+                isLoading = false
+                filterDiaries()
+            }
+            .addOnFailureListener { exception ->
+                Log.w("DiaryFragment", "Error getting documents: ", exception)
+            }
+    }
+
+    private fun filterDiaries() {
+        val filteredList = diaryList.filter { diary ->
+            java.text.SimpleDateFormat("EEEE, dd MMMM yyyy", java.util.Locale.getDefault())
+                .format(diary.timestamp) == selectedDate && diary.category == selectedCategory
+        }
+        diaryAdapter.updateList(filteredList)
+    }
+
     fun onBackPressed() {
         activity?.onBackPressed()
-        activity?.overridePendingTransition(0, 0) // No transition animation when pressing back
+        activity?.overridePendingTransition(0, 0)
     }
 }

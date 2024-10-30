@@ -1,8 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,42 +20,81 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UTS_MAP_Mangan"
         tools:targetApi="31">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".InputMealSnackActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AccountManagementSetting"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RemoveAdsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".BasePage"
-            android:exported="false" />
-        <activity android:name=".WelcomePageBirthActivity" />
-        <activity android:name=".WelcomePageGenderActivity" />
-        <activity android:name=".WelcomePageHeightActivity" />
-        <activity android:name=".WelcomePageWeightActivity" />
-        <activity android:name=".WelcomePageGoalsActivity" />
-        <activity android:name=".GeneralSettingsActivity" />
-        <activity android:name=".NotificationSettingsActivity" />
-        <activity android:name=".FeedbackSettingsActivity" />
-        <activity android:name=".DiaryFragment" />
-        <activity android:name=".NotificationFragment" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WelcomePageBirthActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WelcomePageGenderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WelcomePageHeightActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WelcomePageWeightActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WelcomePageGoalsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GeneralSettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NotificationSettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FeedbackSettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DiaryFragment"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NotificationFragment"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".WelcomePageNameActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileFragment" />
-        <activity android:name=".ProfileSettingsActivity" />
+        <activity
+            android:name=".ProfileFragment"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProfileSettingsActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -100,11 +100,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/capsule_background"
 
+                android:fontFamily="@font/poppins_regular"
                 android:hint="Ayam Bakar"
                 android:inputType="text"
                 android:outlineProvider="none"
                 android:padding="10dp"
-                android:paddingStart="24dp" />
+                android:paddingStart="24dp"
+                android:textColorHint="#A9A9A9" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -127,10 +129,12 @@
                 android:layout_weight="0"
                 android:background="@drawable/capsule_background"
                 android:drawableRight="@drawable/cal_ic"
+                android:fontFamily="@font/poppins_regular"
                 android:hint="300"
                 android:inputType="number"
                 android:outlineProvider="none"
-                android:paddingStart="24dp" />
+                android:paddingStart="24dp"
+                android:textColorHint="#A9A9A9" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -146,17 +150,17 @@
                 android:textColor="#0A2533"
                 android:textSize="15sp" />
 
-            <EditText
-                android:id="@+id/time_input"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/time_picker_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:background="@drawable/capsule_background"
-                android:drawableRight="@drawable/time_ic"
-                android:hint="20:00"
-                android:inputType="number"
-                android:outlineProvider="none"
-                android:paddingStart="24dp" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_vertical"
+                android:text="Select Time"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#0A2533"
+                app:cornerRadius="0dp" />
 
             <LinearLayout
                 android:id="@+id/meal_snack_layout"

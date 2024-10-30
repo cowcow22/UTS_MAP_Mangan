@@ -6,29 +6,62 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
-data class DiaryEntry(val name: String, val calories: String)
+class DiaryAdapter(private var diaryList: List<DiaryEntryClass>, private var isLoading: Boolean) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-class DiaryAdapter(private val diaryList: List<DiaryEntry>) :
-    RecyclerView.Adapter<DiaryAdapter.DiaryViewHolder>() {
+    private val VIEW_TYPE_ITEM = 0
+    private val VIEW_TYPE_SKELETON = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_diary, parent, false)
-        return DiaryViewHolder(view)
+    override fun getItemViewType(position: Int): Int {
+        return if (isLoading) VIEW_TYPE_SKELETON else VIEW_TYPE_ITEM
     }
 
-    override fun onBindViewHolder(holder: DiaryViewHolder, position: Int) {
-        val diaryItem = diaryList[position]
-        holder.tvDiaryItemName.text = diaryItem.name
-        holder.tvDiaryItemCalories.text = diaryItem.calories
-        // You can also load an image into imgDiaryItem if needed
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == VIEW_TYPE_SKELETON) {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_diary_skeleton, parent, false)
+            SkeletonViewHolder(view)
+        } else {
+            val view =
+                LayoutInflater.from(parent.context).inflate(R.layout.item_diary, parent, false)
+            DiaryViewHolder(view)
+        }
     }
 
-    override fun getItemCount() = diaryList.size
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is DiaryViewHolder) {
+            val diary = diaryList[position]
+            holder.bind(diary)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return if (isLoading) 5 else diaryList.size
+    }
+
+    fun updateList(newList: List<DiaryEntryClass>) {
+        diaryList = newList
+        isLoading = false
+        notifyDataSetChanged()
+    }
 
     class DiaryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imgDiaryItem: ImageView = view.findViewById(R.id.imgDiaryItem)
         val tvDiaryItemName: TextView = view.findViewById(R.id.tvDiaryItemName)
         val tvDiaryItemCalories: TextView = view.findViewById(R.id.tvDiaryItemCalories)
+        val tvDiaryItemTime: TextView = view.findViewById(R.id.tvDiaryItemTime)
+
+        fun bind(diary: DiaryEntryClass) {
+            Glide.with(itemView.context)
+                .load(diary.pictureUrl)
+                .into(imgDiaryItem)
+            tvDiaryItemName.text = diary.name
+            tvDiaryItemCalories.text = diary.calories.toString()
+            tvDiaryItemTime.text = diary.time
+        }
     }
+
+    class SkeletonViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
