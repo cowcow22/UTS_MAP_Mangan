@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/poppins_regular"
+            android:layout_marginTop="1dp"
             android:text="Good Morning"
             android:textColor="#000000"
             android:textSize="14sp" />
@@ -75,20 +76,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvName" />
 
+    <TextView
+        android:id="@+id/tvTargetCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="Target Calories: 0 cal"
+        android:textColor="#E91E63"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTotalCalories" />
+
     <!-- Diary Section: Horizontal RecyclerView -->
     <TextView
         android:id="@+id/tvDiary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="18dp"
         android:fontFamily="@font/poppins_bold"
         android:text="Diary"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTotalCalories" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTargetCalories" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDiary"
@@ -114,7 +128,7 @@
         android:fontFamily="@font/poppins_bold"
         android:text="Popular Recipes"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewDiary" />
