@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -33,6 +34,8 @@ class HomeFragment : Fragment() {
     private lateinit var tvTotalCalories: TextView
     private val diaryList = mutableListOf<DiaryEntryClass>()
     private var isLoading = true
+    private lateinit var tvGreeting: TextView
+    private lateinit var icGreeting: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +60,13 @@ class HomeFragment : Fragment() {
         profileName = view.findViewById(R.id.tvName)
         recyclerViewDiary = view.findViewById(R.id.recyclerViewDiary)
         tvTotalCalories = view.findViewById(R.id.tvTotalCalories)
+        tvGreeting = view.findViewById(R.id.tvGreeting)
+        icGreeting = view.findViewById(R.id.icGreeting)
+
+        // Set greeting message and image
+        val (greetingMessage, greetingImage) = getGreetingMessage()
+        tvGreeting.text = greetingMessage
+        icGreeting.setImageResource(greetingImage)
 
         // Retrieve user data from SharedPreferences
         val cachedName = sharedPreferences.getString("name", null)
@@ -158,4 +168,16 @@ class HomeFragment : Fragment() {
                 ).show()
             }
     }
+
+    fun getGreetingMessage(): Pair<String, Int> {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        return when (hour) {
+            in 5..11 -> "Good Morning" to R.drawable.ic_morning
+            in 12..16 -> "Good Afternoon" to R.drawable.ic_morning
+            in 17..20 -> "Good Evening" to R.drawable.ic_night
+            else -> "Good Night" to R.drawable.ic_night
+        }
+    }
+
 }

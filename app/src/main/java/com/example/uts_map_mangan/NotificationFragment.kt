@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class NotificationFragment : Fragment() {
 
@@ -35,6 +38,13 @@ class NotificationFragment : Fragment() {
     private lateinit var foodTrackerCard: CardView
 
     private lateinit var bmiInfo: ConstraintLayout
+    private lateinit var tvBMIValue: TextView
+
+    private lateinit var tvHeightWeight: TextView
+
+    // Firebase
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +52,10 @@ class NotificationFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.activity_notification, container, false)
+
+        // Initialize Firebase Auth and Firestore
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         // Initialize buttons
         btnInfo = view.findViewById(R.id.btnInfo)
@@ -64,6 +78,9 @@ class NotificationFragment : Fragment() {
         foodTrackerCard = view.findViewById(R.id.foodTracker)
 
         bmiInfo = view.findViewById(R.id.tvBMIInfo)
+        tvBMIValue = view.findViewById(R.id.tvBMIValue)
+
+        tvHeightWeight = view.findViewById(R.id.tvHeightWeight)
 
         // Initially show water and food trackers, hide BMI info
         waterTrackerCard.visibility = View.VISIBLE
@@ -100,8 +117,34 @@ class NotificationFragment : Fragment() {
         btnAddFood.setOnClickListener {
             addFood()
         }
+        // Fetch BMI value from Firebase
+        fetchValues()
 
         return view
+    }
+
+    private fun fetchValues() {
+        val user = firebaseAuth.currentUser
+        user?.uid?.let { uid ->
+            firestore.collection("Users").document(uid).get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        val bmiValue = document.getDouble("bmi")
+                        val height = document.getString("height")
+                        val weight = document.getString("weight")
+                        if (bmiValue != null) {
+                            tvBMIValue.text = String.format("%.1f", bmiValue)
+                        }
+                        if (height != null && weight != null) {
+                            tvHeightWeight.text =
+                                "Height (cm): ${height}     Weight (kg): ${weight}"
+                        }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     private fun toggleBMIInfo() {

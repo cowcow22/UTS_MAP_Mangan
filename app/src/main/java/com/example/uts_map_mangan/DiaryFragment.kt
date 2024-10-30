@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Calendar
 
 class DiaryFragment : Fragment() {
 
@@ -40,6 +41,8 @@ class DiaryFragment : Fragment() {
     private var selectedDate: String = ""
     private var selectedCategory: String = "Meal"
     private var isLoading = true
+    private lateinit var tvGreeting: TextView
+    private lateinit var icGreeting: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +61,13 @@ class DiaryFragment : Fragment() {
         profileName = view.findViewById(R.id.tvName)
         btnShowInputDialog = view.findViewById(R.id.btnShowInputDialog)
         recyclerView = view.findViewById(R.id.recyclerViewMeal)
+        tvGreeting = view.findViewById(R.id.tvGreeting)
+        icGreeting = view.findViewById(R.id.icGreeting)
+
+        // Set greeting message and image
+        val (greetingMessage, greetingImage) = getGreetingMessage()
+        tvGreeting.text = greetingMessage
+        icGreeting.setImageResource(greetingImage)
 
         // Initialize SharedPreferences
         sharedPreferences =
@@ -211,6 +221,17 @@ class DiaryFragment : Fragment() {
                 .format(diary.timestamp) == selectedDate && diary.category == selectedCategory
         }
         diaryAdapter.updateList(filteredList)
+    }
+
+    fun getGreetingMessage(): Pair<String, Int> {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        return when (hour) {
+            in 5..11 -> "Good Morning" to R.drawable.ic_morning
+            in 12..16 -> "Good Afternoon" to R.drawable.ic_morning
+            in 17..20 -> "Good Evening" to R.drawable.ic_night
+            else -> "Good Night" to R.drawable.ic_night
+        }
     }
 
     fun onBackPressed() {
