@@ -62,7 +62,7 @@ class DiaryAdapter(private var diaryList: List<DiaryEntryClass>, private var isL
                 .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(16)))
                 .into(imgDiaryItem)
             tvDiaryItemName.text = diary.name
-            tvDiaryItemCalories.text = diary.calories.toString()
+            tvDiaryItemCalories.text = diary.calories.toString() + " cal"
             tvDiaryItemTime.text = diary.time
         }
     }
