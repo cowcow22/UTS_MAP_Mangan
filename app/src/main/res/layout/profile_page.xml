@@ -78,8 +78,9 @@
                         android:layout_marginEnd="32dp"
                         android:layout_marginBottom="3dp"
                         android:text="User Name"
+                        android:fontFamily="@font/poppins_bold"
                         android:textColor="#0A2533"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -88,6 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Basic Account"
+                        android:fontFamily="@font/poppins_regular"
                         android:textColor="#0A2533"
                         android:textSize="14sp"
                         android:textStyle="normal" />
@@ -144,8 +146,9 @@
                         android:drawableEnd="@drawable/googleg_standard_color_18"
                         android:drawablePadding="5dp"
                         android:text="Backup &amp; Restore"
+                        android:fontFamily="@font/poppins_regular"
                         android:textColor="#0A2533"
-                        android:textSize="18sp"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -154,8 +157,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Sign in and synchronize your data"
+                        android:fontFamily="@font/poppins_light"
                         android:textColor="#0A2533"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textStyle="normal" />
                 </LinearLayout>
 
@@ -209,8 +213,9 @@
                         android:layout_marginEnd="0dp"
                         android:layout_marginBottom="8dp"
                         android:text="Settings"
+                        android:fontFamily="@font/poppins_bold"
                         android:textColor="#0A2533"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <Button

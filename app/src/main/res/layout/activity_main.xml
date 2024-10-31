@@ -13,7 +13,7 @@
         android:id="@+id/app_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="49dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/poppins_regular"
         android:gravity="center"
         android:text="Help your path to health goals with happiness"
