@@ -312,7 +312,7 @@ class NotificationFragment : Fragment() {
     private fun getWeightCategory(bmi: Double): Pair<String, Int> {
         return when {
             bmi < 18.5 -> "Underweight" to Color.YELLOW
-            bmi in 18.5..24.9 -> "Normal weight" to Color.GREEN
+            bmi in 18.5..24.9 -> "Normal weight" to Color.parseColor("#4CAF50")
             bmi in 25.0..29.9 -> "Overweight" to Color.YELLOW
             else -> "Obese" to Color.RED
         }

@@ -161,7 +161,7 @@
                 android:background="@drawable/green_button_background"
                 android:text="Select Time"
                 android:textColor="#FFFFFF"
-                app:backgroundTint="#0A2533"
+                app:backgroundTint="#A5BE00"
                 app:cornerRadius="0dp" />
 
             <LinearLayout

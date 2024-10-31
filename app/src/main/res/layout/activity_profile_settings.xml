@@ -182,7 +182,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Weight Loss"
-                        android:fontFamily="@font/poppins_bold"
+                        android:fontFamily="@font/poppins_regular"
                         android:textColor="@color/button_switch_text_color"
                         app:backgroundTint="@color/button_switch_background_color"
                         app:cornerRadius="4dp" />
@@ -193,7 +193,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Maintain Weight"
-                        android:fontFamily="@font/poppins_bold"
+                        android:fontFamily="@font/poppins_regular"
                         android:textColor="@color/button_switch_text_color"
                         app:backgroundTint="@color/button_switch_background_color"
                         app:cornerRadius="4dp" />
@@ -204,7 +204,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Weight Gain"
-                        android:fontFamily="@font/poppins_bold"
+                        android:fontFamily="@font/poppins_regular"
                         android:textColor="@color/button_switch_text_color"
                         app:backgroundTint="@color/button_switch_background_color"
                         app:cornerRadius="4dp" />
