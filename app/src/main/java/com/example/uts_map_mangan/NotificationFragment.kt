@@ -297,7 +297,7 @@ class NotificationFragment : Fragment() {
 
             "Maintain Weight" -> {
                 radioButtonOption1.text =
-                    "Maintain Weight: ${String.format("%.0f", recommendedCalories)} Calories/day"
+                    "Maintain Weight: ${String.format("%d", recommendedCalories)} Calories/day"
                 radioButtonOption1.visibility = View.VISIBLE
                 radioButtonOption2.visibility = View.GONE
                 radioButtonOption3.visibility = View.GONE
