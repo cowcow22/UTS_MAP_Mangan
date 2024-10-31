@@ -62,6 +62,7 @@ class HomeFragment : Fragment() {
         tvTotalCalories = view.findViewById(R.id.tvTotalCalories)
         tvGreeting = view.findViewById(R.id.tvGreeting)
         icGreeting = view.findViewById(R.id.icGreeting)
+        val tvTargetCalories: TextView = view.findViewById(R.id.tvTargetCalories)
 
         // Set greeting message and image
         val (greetingMessage, greetingImage) = getGreetingMessage()
@@ -88,6 +89,7 @@ class HomeFragment : Fragment() {
                     if (document != null) {
                         val name = document.getString("name")
                         val profileUrl = document.getString("profile")
+                        val caloriesIntake = document.getString("caloriesIntake") ?: null
 
                         if (!name.isNullOrEmpty()) {
                             profileName.text = name
@@ -97,6 +99,12 @@ class HomeFragment : Fragment() {
                         if (!profileUrl.isNullOrEmpty()) {
                             Glide.with(this).load(profileUrl).into(profileImage)
                             sharedPreferences.edit().putString("profileUrl", profileUrl).apply()
+                        }
+
+                        if (!caloriesIntake.isNullOrEmpty()) {
+                            tvTargetCalories.text = "Target Calories: $caloriesIntake cal"
+                        } else {
+                            tvTargetCalories.text = "Select calories per day in notification page"
                         }
 
                         // Check if other fields are missing
