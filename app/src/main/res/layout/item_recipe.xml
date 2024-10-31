@@ -11,13 +11,16 @@
         android:orientation="horizontal">
 
         <!-- Repeat the item layout for each diary entry -->
-        <FrameLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="220dp"
             android:layout_height="250dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="8dp"
-            android:elevation="8dp"
-            android:background="@drawable/rounded_frame"> <!-- Set rounded background -->
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -38,10 +41,10 @@
                     android:id="@+id/tvRecipeItemName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="6dp"
-                    android:text="Healthy Taco Salad with fresh vegetable "
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Healthy Taco Salad with fresh vegetables"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -70,10 +73,10 @@
                             android:id="@+id/tvRecipeItemCalories"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginRight="16dp"
                             android:fontFamily="@font/poppins_regular"
                             android:text="120 Kcal"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginTop="1dp"
                             android:textColor="@color/gray"
                             android:textSize="12sp" />
 
@@ -88,9 +91,9 @@
                             android:id="@+id/tvRecipeItemTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
                             android:fontFamily="@font/poppins_regular"
                             android:text="20 Min"
-                            android:layout_marginTop="1dp"
                             android:textColor="@color/gray"
                             android:textSize="12sp" />
 
@@ -99,9 +102,9 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
-        <!-- Add more LinearLayouts for each diary item if needed -->
+        <!-- Add more CardViews for each diary item if needed -->
 
     </LinearLayout>
 </HorizontalScrollView>

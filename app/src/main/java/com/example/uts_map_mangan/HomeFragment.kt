@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class HomeFragment : Fragment() {
@@ -29,10 +28,13 @@ class HomeFragment : Fragment() {
     private lateinit var profileImage: ImageView
     private lateinit var profileName: TextView
     private lateinit var recyclerViewDiary: RecyclerView
+    private lateinit var recyclerViewRecipes: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var diaryAdapter: DiaryAdapter
+    private lateinit var recipesAdapter: RecipesAdapter
     private lateinit var tvTotalCalories: TextView
     private val diaryList = mutableListOf<DiaryEntryClass>()
+    private val recipesList = mutableListOf<RecipeEntry>()
     private var isLoading = true
     private lateinit var tvGreeting: TextView
     private lateinit var icGreeting: ImageView
@@ -59,6 +61,7 @@ class HomeFragment : Fragment() {
         profileImage = view.findViewById(R.id.imgAvatar)
         profileName = view.findViewById(R.id.tvName)
         recyclerViewDiary = view.findViewById(R.id.recyclerViewDiary)
+        recyclerViewRecipes = view.findViewById(R.id.recyclerViewRecipes)
         tvTotalCalories = view.findViewById(R.id.tvTotalCalories)
         tvGreeting = view.findViewById(R.id.tvGreeting)
         icGreeting = view.findViewById(R.id.icGreeting)
@@ -128,28 +131,37 @@ class HomeFragment : Fragment() {
                 }
         }
 
-        // Initialize RecyclerView
+        // Initialize RecyclerView for Diary
         recyclerViewDiary.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         diaryAdapter = DiaryAdapter(diaryList, isLoading)
         recyclerViewDiary.adapter = diaryAdapter
 
+        // Initialize RecyclerView for Recipes
+        recyclerViewRecipes.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recipesAdapter = RecipesAdapter(recipesList)
+        recyclerViewRecipes.adapter = recipesAdapter
+
         // Fetch diary entries from Firestore
         fetchDiaryEntries()
+
+        // Load recipes (this is just an example, you should load actual data)
+        loadRecipes()
     }
 
     private fun fetchDiaryEntries() {
-        val calendar = java.util.Calendar.getInstance()
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0)
-        calendar.set(java.util.Calendar.MINUTE, 0)
-        calendar.set(java.util.Calendar.SECOND, 0)
-        calendar.set(java.util.Calendar.MILLISECOND, 0)
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
         val startOfDay = calendar.time
 
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, 23)
-        calendar.set(java.util.Calendar.MINUTE, 59)
-        calendar.set(java.util.Calendar.SECOND, 59)
-        calendar.set(java.util.Calendar.MILLISECOND, 999)
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
         val endOfDay = calendar.time
 
         firestore.collection("meals_snacks")
@@ -181,6 +193,17 @@ class HomeFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+    }
+
+    private fun loadRecipes() {
+        // Example data, replace with actual data loading logic
+        val exampleRecipes = listOf(
+            RecipeEntry(R.drawable.food_image_example, "Healthy Taco Salad with fresh vegetables", "120 Kcal", "20 Min"),
+            RecipeEntry(R.drawable.food_image_example, "Grilled Chicken", "200 Kcal", "30 Min")
+        )
+        recipesList.clear()
+        recipesList.addAll(exampleRecipes)
+        recipesAdapter.notifyDataSetChanged()
     }
 
     fun getGreetingMessage(): Pair<String, Int> {
