@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UTS_MAP_Mangan"
+rootProject.name = "Mangan"
 include(":app")
  
