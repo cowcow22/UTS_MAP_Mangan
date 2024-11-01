@@ -65,7 +65,7 @@
             android:name=".GeneralSettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".NotificationSettingsActivity"
+            android:name=".HistoryActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".FeedbackSettingsActivity"

@@ -140,7 +140,7 @@ class ProfileFragment : Fragment() {
 
         // Handle notification settings button click
         notificationSettingsButton.setOnClickListener {
-            val intent = Intent(activity, NotificationSettingsActivity::class.java)
+            val intent = Intent(activity, HistoryActivity::class.java)
             startActivityForResult(intent, PROFILE_SETTINGS_REQUEST_CODE)
         }
 

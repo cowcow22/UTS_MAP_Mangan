@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     android:backgroundTint="#FFFFFF"
-    tools:context=".NotificationSettingsActivity">
+    tools:context=".HistoryActivity">
 
 
     <LinearLayout
@@ -56,48 +56,11 @@
                 android:layout_marginRight="40dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Notification Settings"
+                android:text="History"
                 android:textAlignment="center"
                 android:textColor="#0A2533"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/reminder_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_background"
-            android:backgroundTint="#FFFFFF"
-            android:elevation="4dp"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/reminder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins_regular"
-                android:gravity="center_vertical"
-                android:text="Reminder"
-                android:textAlignment="viewStart"
-                android:textColor="#0A2533"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <Switch
-                android:id="@+id/switch1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center_vertical" />
-
         </LinearLayout>
 
     </LinearLayout>
