@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_background"
+    android:padding="16dp">
+
+    <!-- Image Icon -->
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/glasses"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true" />
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mangan."
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_toEndOf="@id/icon"
+        android:layout_marginStart="12dp" />
+
+    <!-- Timestamp -->
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="• 2m"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:layout_toEndOf="@id/title"
+        android:layout_marginStart="8dp" />
+
+    <!-- Message Text -->
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OMG U forgot to drink water!"
+        android:textColor="#007AFF"
+        android:textSize="14sp"
+        android:layout_below="@id/title"
+        android:layout_alignStart="@id/title"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Button -->
+    <Button
+        android:id="@+id/button"
+        android:layout_width="100dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:backgroundTint="#00BFFF"
+        android:text="Drink"
+        android:textColor="#FFFFFF" />
+
+</RelativeLayout>
