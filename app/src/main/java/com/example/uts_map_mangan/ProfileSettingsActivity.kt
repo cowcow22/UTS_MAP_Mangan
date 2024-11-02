@@ -211,7 +211,7 @@ class ProfileSettingsActivity : AppCompatActivity() {
 
         val datePickerDialog =
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                val selectedDate = "$selectedYear/${selectedMonth + 1}/$selectedDay"
                 birthDateInput.setText(selectedDate)
             }, year, month, day)
 
