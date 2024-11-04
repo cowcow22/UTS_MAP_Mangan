@@ -215,7 +215,7 @@
                         android:orientation="horizontal"/>
 
                     <Switch
-                        android:id="@+id/theme_switch"
+                        android:id="@+id/notif_switch"
                         android:layout_width="45sp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|end"

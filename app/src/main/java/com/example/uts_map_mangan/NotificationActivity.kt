@@ -1,5 +1,6 @@
 package com.example.uts_map_mangan
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,7 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class BasePage : AppCompatActivity() {
+class NotificationActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigation: BottomNavigationView
     private lateinit var firebaseAuth: FirebaseAuth
@@ -37,30 +38,35 @@ class BasePage : AppCompatActivity() {
                     switchFragment(HomeFragment())
                     true
                 }
-
                 R.id.nav_diary -> {
                     switchFragment(DiaryFragment())
                     true
                 }
-
                 R.id.nav_notification -> {
                     switchFragment(NotificationFragment())
                     true
                 }
-
                 R.id.nav_profile -> {
                     switchFragment(ProfileFragment())
                     true
                 }
-
                 else -> false
             }.also {
                 handler.postDelayed({ isSwitchingFragment = false }, 500) // 500ms delay
             }
         }
 
-        if (savedInstanceState == null) {
-            bottomNavigation.selectedItemId = R.id.nav_home
+        // Check if the user is authenticated
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            // User is authenticated, navigate to NotificationFragment
+            bottomNavigation.selectedItemId = R.id.nav_notification
+            switchFragment(NotificationFragment())
+        } else {
+            // User is not authenticated, redirect to LoginActivity
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish() // Close NotificationActivity
         }
     }
 

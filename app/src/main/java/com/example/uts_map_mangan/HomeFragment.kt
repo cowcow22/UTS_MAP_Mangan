@@ -3,6 +3,7 @@ package com.example.uts_map_mangan
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts
 
 class HomeFragment : Fragment() {
 
@@ -38,6 +43,8 @@ class HomeFragment : Fragment() {
     private var isLoading = true
     private lateinit var tvGreeting: TextView
     private lateinit var icGreeting: ImageView
+    private lateinit var popUpNotification: PopUpNotification
+    private lateinit var notificationSharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +55,17 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        popUpNotification = PopUpNotification(requireContext())
+
+        notificationSharedPreferences =
+            requireActivity().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+
+        if (isFirstTimeOpeningApp()) {
+            requestNotificationPermission()
+            popUpNotification.startNotifications()
+        }
+
 
         // Initialize Firebase Auth and Firestore
         firebaseAuth = FirebaseAuth.getInstance()
@@ -198,7 +216,12 @@ class HomeFragment : Fragment() {
     private fun loadRecipes() {
         // Example data, replace with actual data loading logic
         val exampleRecipes = listOf(
-            RecipeEntry(R.drawable.food_image_example, "Healthy Taco Salad with fresh vegetables", "120 Kcal", "20 Min"),
+            RecipeEntry(
+                R.drawable.food_image_example,
+                "Healthy Taco Salad with fresh vegetables",
+                "120 Kcal",
+                "20 Min"
+            ),
             RecipeEntry(R.drawable.food_image_example, "Grilled Chicken", "200 Kcal", "30 Min")
         )
         recipesList.clear()
@@ -217,4 +240,40 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun isFirstTimeOpeningApp(): Boolean {
+        val isFirstTime = notificationSharedPreferences.getBoolean("isFirstTimeOpeningApp", true)
+        if (isFirstTime) {
+            notificationSharedPreferences.edit().putBoolean("isFirstTimeOpeningApp", false).apply()
+        }
+        return isFirstTime
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                Toast.makeText(
+                    requireContext(),
+                    "Notification permission granted",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Notification permission denied",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 }
