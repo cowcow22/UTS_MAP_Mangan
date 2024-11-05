@@ -1,6 +1,6 @@
 package com.example.uts_map_mangan
 
-import android.content.res.ColorStateList
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,12 +17,12 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class NotificationFragment : Fragment() {
-
     // Water Tracker Variables
     private var currentIntake = 0
     private lateinit var tvCurrentIntake: TextView
@@ -55,7 +55,6 @@ class NotificationFragment : Fragment() {
     private lateinit var radioButtonOption2: RadioButton
     private lateinit var radioButtonOption3: RadioButton
 
-
     // Firebase
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -66,6 +65,7 @@ class NotificationFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.activity_notification, container, false)
+
 
         // Initialize Firebase Auth and Firestore
         firebaseAuth = FirebaseAuth.getInstance()
@@ -86,6 +86,8 @@ class NotificationFragment : Fragment() {
         progressFoodBar = view.findViewById(R.id.progressFoodBar)
         btnAddFood = view.findViewById(R.id.btnFood)
         progressFoodBar.max = 3
+
+        loadIntakeData()
 
         // Layouts
         waterTrackerCard = view.findViewById(R.id.waterTracker)
@@ -337,11 +339,8 @@ class NotificationFragment : Fragment() {
             currentIntake++
             tvCurrentIntake.text = "$currentIntake/8 Glasses"
             updateProgressBar()
+            saveIntakeData()
         }
-    }
-
-    private fun updateProgressBar() {
-        progressBar.progress = currentIntake
     }
 
     private fun addFood() {
@@ -349,10 +348,55 @@ class NotificationFragment : Fragment() {
             currentFoodIntake++
             tvFoodEaten.text = "$currentFoodIntake/3 Plates"
             updateFoodProgressBar()
+            saveIntakeData()
         }
     }
 
+    private fun updateProgressBar() {
+        progressBar.progress = currentIntake
+    }
+
+
     private fun updateFoodProgressBar() {
         progressFoodBar.progress = currentFoodIntake
+    }
+
+    // Tambahkan fungsi untuk menyimpan data ke SharedPreferences
+    private fun saveIntakeData() {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("IntakeData", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putInt("currentIntake", currentIntake)
+        editor.putInt("currentFoodIntake", currentFoodIntake)
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        editor.putString("lastUpdateDate", currentDate)
+        val userId = firebaseAuth.currentUser?.uid
+        editor.putString("accountId", userId)
+        editor.apply()
+    }
+
+    // Tambahkan fungsi untuk mengambil data dari SharedPreferences
+    private fun loadIntakeData() {
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("IntakeData", Context.MODE_PRIVATE)
+        val lastUpdateDate = sharedPreferences.getString("lastUpdateDate", "")
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val savedAccountId = sharedPreferences.getString("accountId", "")
+        val currentAccountId = firebaseAuth.currentUser?.uid
+
+        if (lastUpdateDate != currentDate || savedAccountId != currentAccountId) {
+            // Reset intake data if the date or account ID has changed
+            currentIntake = 0
+            currentFoodIntake = 0
+            saveIntakeData()
+        } else {
+            currentIntake = sharedPreferences.getInt("currentIntake", 0)
+            currentFoodIntake = sharedPreferences.getInt("currentFoodIntake", 0)
+        }
+
+        tvCurrentIntake.text = "$currentIntake/8 Glasses"
+        tvFoodEaten.text = "$currentFoodIntake/3 Plates"
+        updateProgressBar()
+        updateFoodProgressBar()
     }
 }
