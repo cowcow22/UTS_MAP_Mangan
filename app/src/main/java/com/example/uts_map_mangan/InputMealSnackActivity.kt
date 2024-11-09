@@ -25,24 +25,60 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.example.uts_map_mangan.BuildConfig
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.Scope
+import com.google.api.services.drive.Drive
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
+import com.google.api.client.http.FileContent
+import com.google.api.services.drive.DriveScopes
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.services.drive.model.FileList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.Objects
 import java.util.UUID
+import com.google.api.services.drive.model.File as DriveFile
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class InputMealSnackActivity : AppCompatActivity() {
 
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_IMAGE_PICK = 2
     private val REQUEST_CAMERA_PERMISSION = 100
+    private val REQUEST_AUTHORIZATION = 101
     private var pictureUri: Uri? = null
     private var selectedTime: String? = null
+    private lateinit var driveService: Drive
+    private lateinit var credential: GoogleAccountCredential
+    private var isUploading = false // Add this flag
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_input_meal_snack)
+
+        // Configure Google Sign-In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestScopes(Scope(DriveScopes.DRIVE_FILE))
+            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(this, gso)
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            setupDriveService(account)
+        } else {
+            startActivityForResult(googleSignInClient.signInIntent, 1000)
+        }
 
         val timePickerButton = findViewById<Button>(R.id.time_picker_button)
 
@@ -68,8 +104,18 @@ class InputMealSnackActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.add_button).setOnClickListener {
-            addMealOrSnack()
+            checkGoogleDriveAccess()
         }
+    }
+
+    private fun setupDriveService(account: GoogleSignInAccount) {
+        credential = GoogleAccountCredential.usingOAuth2(this, listOf(DriveScopes.DRIVE_FILE))
+        credential.selectedAccount = account.account
+        driveService = Drive.Builder(
+            NetHttpTransport(),
+            GsonFactory(),
+            credential
+        ).setApplicationName("UTS Map Mangan").build()
     }
 
     private fun checkCameraPermission() {
@@ -123,18 +169,34 @@ class InputMealSnackActivity : AppCompatActivity() {
         val category = if (findViewById<MaterialButton>(R.id.meals).isChecked) "Meal" else "Snack"
         val imageFile = createImageFile(name, category)
 
-
-
         pictureUri = FileProvider.getUriForFile(
-            Objects.requireNonNull(getApplicationContext()),
-            BuildConfig.APPLICATION_ID + ".provider", imageFile!!
+            this,
+            BuildConfig.APPLICATION_ID + ".provider",
+            imageFile
         )
+        Log.d("SavedFileFromCamera", "Saved file path: ${pictureUri}")
+
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
             putExtra(MediaStore.EXTRA_OUTPUT, pictureUri)
         }
         if (takePictureIntent.resolveActivity(packageManager) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         }
+    }
+
+    private fun createImageFile(name: String, category: String): File {
+        val dateFormat = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault())
+        val date = dateFormat.format(Date())
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+        // Ensure the directory exists
+        if (storageDir != null && !storageDir.exists()) {
+            storageDir.mkdirs()
+        }
+
+        Log.d("Saved to local directory", "path: ${storageDir}/${date}_${category}_${name}.jpg")
+
+        return File(storageDir, "${date}_${category}_${name}.jpg")
     }
 
     private fun openGallery() {
@@ -145,6 +207,29 @@ class InputMealSnackActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_AUTHORIZATION && resultCode == Activity.RESULT_OK) {
+            // Retry the operation after user grants permission
+            addMealOrSnack()
+        } else if (requestCode == REQUEST_AUTHORIZATION && resultCode != Activity.RESULT_OK) {
+            // If the user denies permission, finish the activity
+            Toast.makeText(
+                this,
+                "Permission denied. Cannot save image to Google Drive.",
+                Toast.LENGTH_SHORT
+            ).show()
+            finish()
+        }
+        if (requestCode == 1000) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    setupDriveService(account)
+                }
+            } catch (e: ApiException) {
+                Log.w("GoogleSignIn", "Google sign in failed", e)
+            }
+        }
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
@@ -165,17 +250,6 @@ class InputMealSnackActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun createImageFile(name: String, category: String): File? {
-        val dateFormat = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault())
-        val date = dateFormat.format(Date())
-        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-            "${date}_${category}_${name}",
-            ".jpg",
-            storageDir
-        )
     }
 
     private fun showTimePicker(timePickerButton: Button) {
@@ -201,7 +275,25 @@ class InputMealSnackActivity : AppCompatActivity() {
         picker.show(supportFragmentManager, "MATERIAL_TIME_PICKER")
     }
 
-    private fun addMealOrSnack() {
+    private fun checkGoogleDriveAccess() {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account == null) {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestScopes(Scope(DriveScopes.DRIVE_FILE))
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(this, gso)
+            startActivityForResult(googleSignInClient.signInIntent, 1000)
+        } else {
+            val saveOnlyDrive = true
+            addMealOrSnack(saveOnlyDrive)
+        }
+    }
+
+    private fun addMealOrSnack(saveOnlyDrive: Boolean = false) {
+        if (isUploading) return // Prevent multiple uploads
+        isUploading = true
+
         val name = findViewById<EditText>(R.id.foodname_input).text.toString()
         val calories = findViewById<EditText>(R.id.calories_input).text.toString().toIntOrNull()
         val time = selectedTime ?: ""
@@ -209,32 +301,38 @@ class InputMealSnackActivity : AppCompatActivity() {
 
         if (name.isEmpty()) {
             Toast.makeText(this, "Name must be filled", Toast.LENGTH_SHORT).show()
+            isUploading = false
             return
         }
 
         if (calories == null) {
             Toast.makeText(this, "Calories must be filled", Toast.LENGTH_SHORT).show()
+            isUploading = false
             return
         }
 
         if (time.isEmpty()) {
             Toast.makeText(this, "Time must be selected", Toast.LENGTH_SHORT).show()
+            isUploading = false
             return
         }
 
         if (category.isEmpty()) {
             Toast.makeText(this, "Category must be selected", Toast.LENGTH_SHORT).show()
+            isUploading = false
             return
         }
 
         if (pictureUri == null) {
             Toast.makeText(this, "Picture must be added", Toast.LENGTH_SHORT).show()
+            isUploading = false
             return
         }
 
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser == null) {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+            isUploading = false
             return
         }
 
@@ -260,20 +358,163 @@ class InputMealSnackActivity : AppCompatActivity() {
                     accountId = currentUser.uid
                 )
                 val firestore = FirebaseFirestore.getInstance()
-                firestore.collection("meals_snacks").add(mealSnack).addOnCompleteListener { task ->
-                    progressDialog.dismiss()
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Diary entry added successfully", Toast.LENGTH_SHORT)
-                            .show()
-                        finish() // Finish the activity
-                    } else {
-                        Toast.makeText(this, "Failed to add diary entry", Toast.LENGTH_SHORT).show()
-                    }
+                if (saveOnlyDrive) {
+                    firestore.collection("meals_snacks").add(mealSnack)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                // Download the image from Firebase Storage
+                                downloadImageFromFirebase(
+                                    uri.toString(),
+                                    name,
+                                    category,
+                                    progressDialog
+                                )
+                            } else {
+                                progressDialog.dismiss()
+                                Toast.makeText(
+                                    this,
+                                    "Failed to add diary entry",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                isUploading = false
+                            }
+                        }
+                } else {
+                    downloadImageFromFirebase(
+                        uri.toString(),
+                        name,
+                        category,
+                        progressDialog
+                    )
                 }
             }
         }.addOnFailureListener {
             progressDialog.dismiss()
             Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+            isUploading = false
         }
+    }
+
+    private fun downloadImageFromFirebase(
+        imageUrl: String,
+        name: String,
+        category: String,
+        progressDialog: ProgressDialog
+    ) {
+        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
+        val localFile = File.createTempFile("images", "jpg")
+
+        storageRef.getFile(localFile).addOnSuccessListener {
+            // Image downloaded successfully, now upload it to Google Drive
+            val uri = Uri.fromFile(localFile)
+            saveImageToDrive(uri, name, category, progressDialog)
+        }.addOnFailureListener {
+            progressDialog.dismiss()
+            Toast.makeText(this, "Failed to download image from Firebase", Toast.LENGTH_SHORT)
+                .show()
+            isUploading = false
+        }
+    }
+
+    private fun getOrCreateFolder(folderName: String): String {
+        val query =
+            "mimeType='application/vnd.google-apps.folder' and name='$folderName' and trashed=false"
+        val result: FileList = driveService.files().list().setQ(query).setSpaces("drive").execute()
+        val folder = result.files.firstOrNull()
+
+        return if (folder == null) {
+            val newFolder = DriveFile().apply {
+                name = folderName
+                mimeType = "application/vnd.google-apps.folder"
+            }
+            val createdFolder = driveService.files().create(newFolder).setFields("id").execute()
+            createdFolder.id
+        } else {
+            folder.id
+        }
+    }
+
+    private fun saveImageToDrive(
+        uri: Uri,
+        name: String,
+        category: String,
+        progressDialog: ProgressDialog
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val folderId = getOrCreateFolder("ManganDiaries")
+                val filePath = uri.path ?: return@launch
+                val file = File(filePath)
+
+                // Ensure the file exists
+                if (!file.exists()) {
+                    withContext(Dispatchers.Main) {
+                        progressDialog.dismiss()
+                        Toast.makeText(
+                            this@InputMealSnackActivity,
+                            "File not found: ${file.absolutePath}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        isUploading = false
+                    }
+                    return@launch
+                }
+
+                // Generate the file name using the current date and time, category, and name
+                val timestamp = Date()
+                val hour = selectedTime ?: "00:00 AM"
+
+                val inputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+                val hourParsed = inputFormat.parse(hour)
+                val hourFormatted = outputFormat.format(hourParsed)
+
+                val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+                val date = dateFormat.format(timestamp)
+                val fileName = "${date}_${hourFormatted}_${category}_${name}.jpg"
+
+                val fileContent = FileContent("image/jpeg", file)
+                val driveFile = DriveFile().apply {
+                    this.name = fileName
+                    parents = listOf(folderId)
+                }
+
+                driveService.files().create(driveFile, fileContent).execute()
+
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this@InputMealSnackActivity,
+                        "File saved to Google Drive successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                    isUploading = false
+                }
+            } catch (e: UserRecoverableAuthIOException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    startActivityForResult(e.intent, REQUEST_AUTHORIZATION)
+                    isUploading = false
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this@InputMealSnackActivity,
+                        "Failed to save image to Google Drive: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    isUploading = false
+                }
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

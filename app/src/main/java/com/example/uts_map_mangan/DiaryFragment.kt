@@ -1,5 +1,6 @@
 package com.example.uts_map_mangan
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -26,6 +27,9 @@ import java.util.Calendar
 import java.util.Locale
 
 class DiaryFragment : Fragment() {
+    companion object {
+        private const val REQUEST_CODE_INPUT_MEAL_SNACK = 1001
+    }
 
     private lateinit var calendarView: CalendarView
     private lateinit var btnShowMore: Button
@@ -169,7 +173,8 @@ class DiaryFragment : Fragment() {
     }
 
     private fun showInputDialog() {
-        startActivity(Intent(requireContext(), InputMealSnackActivity::class.java))
+        val intent = Intent(requireContext(), InputMealSnackActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_INPUT_MEAL_SNACK)
     }
 
     private fun fetchUserDataFromFirebase() {
@@ -242,6 +247,14 @@ class DiaryFragment : Fragment() {
             in 12..16 -> "Good Afternoon" to R.drawable.ic_morning
             in 17..20 -> "Good Evening" to R.drawable.ic_night
             else -> "Good Night" to R.drawable.ic_night
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_INPUT_MEAL_SNACK && resultCode == Activity.RESULT_OK) {
+            // Refresh or reload the fragment
+            fetchDiaries()
         }
     }
 
