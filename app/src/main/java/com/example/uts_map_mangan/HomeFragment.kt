@@ -25,6 +25,9 @@ import java.util.Locale
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeFragment : Fragment() {
 
@@ -65,7 +68,6 @@ class HomeFragment : Fragment() {
             requestNotificationPermission()
             popUpNotification.startNotifications()
         }
-
 
         // Initialize Firebase Auth and Firestore
         firebaseAuth = FirebaseAuth.getInstance()
@@ -166,6 +168,20 @@ class HomeFragment : Fragment() {
 
         // Load recipes (this is just an example, you should load actual data)
         loadRecipes()
+
+        // Navigate to ProfileFragment on profileImage click
+        profileImage.setOnClickListener {
+            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment_container, ProfileFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+
+            // Set the active icon to profile page
+            val bottomNavigation: BottomNavigationView =
+                requireActivity().findViewById(R.id.bottomNavigation)
+            bottomNavigation.selectedItemId = R.id.nav_profile
+        }
     }
 
     private fun fetchDiaryEntries() {

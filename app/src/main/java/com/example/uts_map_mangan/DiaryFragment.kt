@@ -17,9 +17,12 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -169,6 +172,20 @@ class DiaryFragment : Fragment() {
             todaysMeal.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray))
             selectedCategory = "Snack"
             filterDiaries()
+        }
+
+        // Navigate to ProfileFragment on profileImage click
+        profileImage.setOnClickListener {
+            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment_container, ProfileFragment())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+
+            // Set the active icon to profile page
+            val bottomNavigation: BottomNavigationView =
+                requireActivity().findViewById(R.id.bottomNavigation)
+            bottomNavigation.selectedItemId = R.id.nav_profile
         }
     }
 
