@@ -1,110 +1,96 @@
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true"
-    android:scrollbars="none">
+    android:layout_width="220dp"
+    android:layout_height="250dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginTop="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <!-- Repeat the item layout for each diary entry -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="220dp"
-            android:layout_height="250dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="8dp">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivRecipeItemImage"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/food_image_example"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedImage" />
+
+        <TextView
+            android:id="@+id/tvRecipeItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Healthy Taco Salad with fresh vegetables"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/ivRecipeItemImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="140dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/food_image_example"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.RoundedImage" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_fire"
+                    app:tint="@android:color/darker_gray" />
 
                 <TextView
-                    android:id="@+id/tvRecipeItemName"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvRecipeItemCalories"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="6dp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="Healthy Taco Salad with fresh vegetables"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="1dp"
+                    android:layout_marginRight="16dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="120 Kcal"
+                    android:textColor="@color/gray"
+                    android:textSize="12sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_clock"
+                    app:tint="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/tvRecipeItemTime"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginEnd="4dp"
-                            android:src="@drawable/ic_fire"
-                            app:tint="@android:color/darker_gray" />
-
-                        <TextView
-                            android:id="@+id/tvRecipeItemCalories"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:layout_marginRight="16dp"
-                            android:fontFamily="@font/poppins_regular"
-                            android:text="120 Kcal"
-                            android:textColor="@color/gray"
-                            android:textSize="12sp" />
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginEnd="4dp"
-                            android:src="@drawable/ic_clock"
-                            app:tint="@android:color/darker_gray" />
-
-                        <TextView
-                            android:id="@+id/tvRecipeItemTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:fontFamily="@font/poppins_regular"
-                            android:text="20 Min"
-                            android:textColor="@color/gray"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
+                    android:layout_marginTop="1dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="20 Min"
+                    android:textColor="@color/gray"
+                    android:textSize="12sp" />
 
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- Add more CardViews for each diary item if needed -->
+        </LinearLayout>
 
     </LinearLayout>
-</HorizontalScrollView>
+</androidx.cardview.widget.CardView>

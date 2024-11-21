@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
 
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -105,6 +106,7 @@
 
         <receiver android:name=".EatReminderReceiver" />
         <receiver android:name=".DrinkReminderReceiver" />
+        <activity android:name=".RecipeDetailActivity" />
     </application>
 
 </manifest>

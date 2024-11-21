@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -160,7 +160,7 @@ class HomeFragment : Fragment() {
         // Initialize RecyclerView for Recipes
         recyclerViewRecipes.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        recipesAdapter = RecipesAdapter(recipesList)
+        recipesAdapter = RecipesAdapter(recipesList, this)
         recyclerViewRecipes.adapter = recipesAdapter
 
         // Fetch diary entries from Firestore
@@ -182,7 +182,29 @@ class HomeFragment : Fragment() {
                 requireActivity().findViewById(R.id.bottomNavigation)
             bottomNavigation.selectedItemId = R.id.nav_profile
         }
+
+        // Initialize RecyclerView for Recipes
+        recyclerViewRecipes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recipesAdapter = RecipesAdapter(recipesList, this)
+        recyclerViewRecipes.adapter = recipesAdapter
+
+        // Fetch diary entries from Firestore
+        fetchDiaryEntries()
+
+        // Load recipes (this is just an example, you should load actual data)
+        loadRecipes()
     }
+
+    override fun onItemClick(recipe: RecipeEntry) {
+        // Handle item click and navigate to the new layout
+        val intent = Intent(activity, RecipeDetailActivity::class.java)
+        intent.putExtra("RECIPE_NAME", recipe.name)
+        intent.putExtra("RECIPE_IMAGE", recipe.imageResId)
+        intent.putExtra("RECIPE_CALORIES", recipe.calories)
+        intent.putExtra("RECIPE_TIME", recipe.time)
+        startActivity(intent)
+    }
+
 
     private fun fetchDiaryEntries() {
         val calendar = Calendar.getInstance()

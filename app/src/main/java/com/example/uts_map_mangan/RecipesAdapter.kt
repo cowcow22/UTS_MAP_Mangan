@@ -7,31 +7,42 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RecipesAdapter(private val recipes: List<RecipeEntry>) :
-    RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
+class RecipesAdapter(
+    private val recipesList: List<RecipeEntry>,
+    private val itemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder>() {
 
-    class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.ivRecipeItemImage)
-        val nameTextView: TextView = itemView.findViewById(R.id.tvRecipeItemName)
-        val caloriesTextView: TextView = itemView.findViewById(R.id.tvRecipeItemCalories)
-        val timeTextView: TextView = itemView.findViewById(R.id.tvRecipeItemTime)
+    interface OnItemClickListener {
+        fun onItemClick(recipe: RecipeEntry)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_recipe, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recipe, parent, false)
         return RecipeViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        val recipe = recipes[position]
-        holder.imageView.setImageResource(recipe.imageResId)
-        holder.nameTextView.text = recipe.name
-        holder.caloriesTextView.text = recipe.calories
-        holder.timeTextView.text = recipe.time
+        val recipe = recipesList[position]
+        holder.bind(recipe, itemClickListener)
     }
 
-    override fun getItemCount(): Int {
-        return recipes.size
+    override fun getItemCount(): Int = recipesList.size
+
+    class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val recipeImage: ImageView = itemView.findViewById(R.id.ivRecipeItemImage)
+        private val recipeName: TextView = itemView.findViewById(R.id.tvRecipeItemName)
+        private val recipeCalories: TextView = itemView.findViewById(R.id.tvRecipeItemCalories)
+        private val recipeTime: TextView = itemView.findViewById(R.id.tvRecipeItemTime)
+
+        fun bind(recipe: RecipeEntry, clickListener: OnItemClickListener) {
+            recipeImage.setImageResource(recipe.imageResId)
+            recipeName.text = recipe.name
+            recipeCalories.text = recipe.calories
+            recipeTime.text = recipe.time
+
+            itemView.setOnClickListener {
+                clickListener.onItemClick(recipe)
+            }
+        }
     }
 }
