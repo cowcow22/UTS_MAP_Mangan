@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class DiaryFragment : Fragment() {
+class DiaryFragment : Fragment(), DiaryAdapter.OnItemClickListener {
     companion object {
         private const val REQUEST_CODE_INPUT_MEAL_SNACK = 1001
     }
@@ -46,7 +46,7 @@ class DiaryFragment : Fragment() {
     private lateinit var btnShowInputDialog: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var diaryAdapter: DiaryAdapter
-    private val diaryList = mutableListOf<DiaryEntryClass>()
+    private val diaryList = mutableListOf<MealSnack>()
     private var selectedDate: String = ""
     private var selectedCategory: String = "Meal"
     private var isLoading = true
@@ -105,7 +105,7 @@ class DiaryFragment : Fragment() {
         // Initialize RecyclerView
         recyclerView.layoutManager =
             LinearLayoutManager(context)
-        diaryAdapter = DiaryAdapter(diaryList, isLoading)
+        diaryAdapter = DiaryAdapter(this)
         recyclerView.adapter = diaryAdapter
 
         // Fetch diary entries from Firestore
@@ -189,6 +189,11 @@ class DiaryFragment : Fragment() {
         }
     }
 
+    override fun onItemClick(mealSnack: MealSnack) {
+        // Handle item click
+        Toast.makeText(context, "Clicked: ${mealSnack.name}", Toast.LENGTH_SHORT).show()
+    }
+
     private fun showInputDialog() {
         val intent = Intent(requireContext(), InputMealSnackActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE_INPUT_MEAL_SNACK)
@@ -232,7 +237,7 @@ class DiaryFragment : Fragment() {
                     diaryList.clear()
                     val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
                     for (document in result) {
-                        val diary = document.toObject(DiaryEntryClass::class.java)
+                        val diary = document.toObject(MealSnack::class.java)
                         diaryList.add(diary)
                     }
                     // Sort the list by the time attribute

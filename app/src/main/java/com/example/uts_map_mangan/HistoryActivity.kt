@@ -4,17 +4,18 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryActivity : AppCompatActivity(), DiaryAdapter.OnItemClickListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var diaryAdapter: DiaryAdapter
-    private val diaryList = mutableListOf<DiaryEntryClass>()
+    private val diaryList = mutableListOf<MealSnack>()
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
@@ -27,7 +28,7 @@ class HistoryActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerViewMeal)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        diaryAdapter = DiaryAdapter(diaryList, isLoading = false) // Assuming isLoading is a boolean
+        diaryAdapter = DiaryAdapter(this)
         recyclerView.adapter = diaryAdapter
 
         findViewById<Button>(R.id.back_button_notification).setOnClickListener {
@@ -51,14 +52,19 @@ class HistoryActivity : AppCompatActivity() {
                 .addOnSuccessListener { result ->
                     diaryList.clear()
                     for (document in result) {
-                        val diary = document.toObject(DiaryEntryClass::class.java)
+                        val diary = document.toObject(MealSnack::class.java)
                         diaryList.add(diary)
                     }
-                    diaryAdapter.notifyDataSetChanged()
+                    diaryAdapter.updateList(diaryList)
                 }
                 .addOnFailureListener { exception ->
                     exception.printStackTrace()
                 }
         }
+    }
+
+    override fun onItemClick(mealSnack: MealSnack) {
+        // Handle item click
+        Toast.makeText(this, "Clicked: ${mealSnack.name}", Toast.LENGTH_SHORT).show()
     }
 }

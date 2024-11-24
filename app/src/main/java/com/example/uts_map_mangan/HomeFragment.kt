@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener {
+class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener, DiaryAdapter.OnItemClickListener {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -41,7 +41,7 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener {
     private lateinit var diaryAdapter: DiaryAdapter
     private lateinit var recipesAdapter: RecipesAdapter
     private lateinit var tvTotalCalories: TextView
-    private val diaryList = mutableListOf<DiaryEntryClass>()
+    private val diaryList = mutableListOf<MealSnack>()
     private val recipesList = mutableListOf<RecipeEntry>()
     private var isLoading = true
     private lateinit var tvGreeting: TextView
@@ -154,7 +154,7 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener {
         // Initialize RecyclerView for Diary
         recyclerViewDiary.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        diaryAdapter = DiaryAdapter(diaryList, isLoading)
+        diaryAdapter = DiaryAdapter(this)
         recyclerViewDiary.adapter = diaryAdapter
 
         // Initialize RecyclerView for Recipes
@@ -182,17 +182,6 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener {
                 requireActivity().findViewById(R.id.bottomNavigation)
             bottomNavigation.selectedItemId = R.id.nav_profile
         }
-
-        // Initialize RecyclerView for Recipes
-        recyclerViewRecipes.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        recipesAdapter = RecipesAdapter(recipesList, this)
-        recyclerViewRecipes.adapter = recipesAdapter
-
-        // Fetch diary entries from Firestore
-        fetchDiaryEntries()
-
-        // Load recipes (this is just an example, you should load actual data)
-        loadRecipes()
     }
 
     override fun onItemClick(recipe: RecipeEntry) {
@@ -205,6 +194,12 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener {
         startActivity(intent)
     }
 
+    override fun onItemClick(mealSnack: MealSnack) {
+        // Handle item click and navigate to activity_input_meal_snack for updating
+        val intent = Intent(activity, InputMealSnackActivity::class.java)
+        intent.putExtra("mealSnack", mealSnack)
+        startActivity(intent)
+    }
 
     private fun fetchDiaryEntries() {
         val calendar = Calendar.getInstance()
@@ -226,11 +221,11 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener {
             .whereLessThanOrEqualTo("timestamp", endOfDay)
             .get()
             .addOnSuccessListener { result ->
-                val newDiaryList = mutableListOf<DiaryEntryClass>()
+                val newDiaryList = mutableListOf<MealSnack>()
                 var totalCalories = 0L
                 val dateFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
                 for (document in result) {
-                    val diary = document.toObject(DiaryEntryClass::class.java)
+                    val diary = document.toObject(MealSnack::class.java)
                     newDiaryList.add(diary)
                     totalCalories += diary.calories
                 }

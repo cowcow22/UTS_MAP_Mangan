@@ -61,10 +61,24 @@ class InputMealSnackActivity : AppCompatActivity() {
     private lateinit var driveService: Drive
     private lateinit var credential: GoogleAccountCredential
     private var isUploading = false // Add this flag
+    private var mealSnack: MealSnack? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_input_meal_snack)
+
+        mealSnack = intent.getParcelableExtra("mealSnack")
+
+        mealSnack?.let {
+            // Populate the fields with existing data
+            findViewById<EditText>(R.id.foodname_input).setText(it.name)
+            findViewById<EditText>(R.id.calories_input).setText(it.calories.toString())
+            findViewById<Button>(R.id.add_button).text = "Update"
+        }
+
+        findViewById<Button>(R.id.add_button).setOnClickListener {
+            saveOrUpdateMealSnack()
+        }
 
         // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -105,6 +119,65 @@ class InputMealSnackActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.add_button).setOnClickListener {
             checkGoogleDriveAccess()
+        }
+    }
+
+
+    private fun saveOrUpdateMealSnack() {
+        val name = findViewById<EditText>(R.id.foodname_input).text.toString()
+        val calories = findViewById<EditText>(R.id.calories_input).text.toString().toInt()
+
+        if (mealSnack == null) {
+            // Add new meal/snack logic
+            val newMealSnack = MealSnack(
+                id = UUID.randomUUID().toString(), // Generate a unique ID
+                name = name,
+                calories = calories,
+                timestamp = Date()
+            )
+            saveMealSnackToDatabase(newMealSnack)
+        } else {
+            // Update existing meal/snack logic
+            mealSnack = mealSnack?.copy(name = name, calories = calories)
+            updateMealSnackInDatabase(mealSnack!!)
+        }
+
+        finish()
+    }
+
+    private fun saveMealSnackToDatabase(mealSnack: MealSnack) {
+        val firestore = FirebaseFirestore.getInstance()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser != null) {
+            val mealSnackCollection = firestore.collection("users").document(currentUser.uid).collection("meals_snacks")
+            mealSnackCollection.document(mealSnack.id).set(mealSnack)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Meal/Snack added successfully", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to add meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateMealSnackInDatabase(mealSnack: MealSnack) {
+        val firestore = FirebaseFirestore.getInstance()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        if (currentUser != null) {
+            val mealSnackCollection = firestore.collection("users").document(currentUser.uid).collection("meals_snacks")
+            mealSnackCollection.document(mealSnack.id).set(mealSnack)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Meal/Snack updated successfully", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Failed to update meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
         }
     }
 
