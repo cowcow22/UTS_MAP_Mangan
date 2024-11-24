@@ -3,10 +3,9 @@ package com.example.uts_map_mangan
 import android.os.Parcel
 import android.os.Parcelable
 import java.util.Date
-import java.util.UUID
 
 data class MealSnack(
-    val id: String = UUID.randomUUID().toString(),
+    val id: String = "",
     val name: String = "",
     val calories: Int = 0,
     val time: String = "",
@@ -15,8 +14,10 @@ data class MealSnack(
     val timestamp: Date = Date(),
     val accountId: String = ""
 ) : Parcelable {
+    constructor() : this("", "", 0, "", "", "", Date(), "")
+
     constructor(parcel: Parcel) : this(
-        parcel.readString() ?: UUID.randomUUID().toString(),
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readString() ?: "",

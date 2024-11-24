@@ -107,6 +107,7 @@
         <receiver android:name=".EatReminderReceiver" />
         <receiver android:name=".DrinkReminderReceiver" />
         <activity android:name=".RecipeDetailActivity" />
+        <activity android:name=".UpdateMealSnackActivity" />
     </application>
 
 </manifest>

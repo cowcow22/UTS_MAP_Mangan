@@ -72,7 +72,7 @@ class DiaryAdapter(private val itemClickListener: OnItemClickListener) : Recycle
             tvDiaryItemTime.text = mealSnack.time
 
             itemView.setOnClickListener {
-                val intent = Intent(itemView.context, InputMealSnackActivity::class.java)
+                val intent = Intent(itemView.context, UpdateMealSnackActivity::class.java)
                 intent.putExtra("mealSnack", mealSnack)
                 itemView.context.startActivity(intent)
             }

@@ -150,7 +150,7 @@ class InputMealSnackActivity : AppCompatActivity() {
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         if (currentUser != null) {
-            val mealSnackCollection = firestore.collection("users").document(currentUser.uid).collection("meals_snacks")
+            val mealSnackCollection = firestore.collection("meals_snacks")
             mealSnackCollection.document(mealSnack.id).set(mealSnack)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Meal/Snack added successfully", Toast.LENGTH_SHORT).show()
@@ -168,7 +168,7 @@ class InputMealSnackActivity : AppCompatActivity() {
         val currentUser = FirebaseAuth.getInstance().currentUser
 
         if (currentUser != null) {
-            val mealSnackCollection = firestore.collection("users").document(currentUser.uid).collection("meals_snacks")
+            val mealSnackCollection = firestore.collection("meals_snacks")
             mealSnackCollection.document(mealSnack.id).set(mealSnack)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Meal/Snack updated successfully", Toast.LENGTH_SHORT).show()
@@ -421,7 +421,10 @@ class InputMealSnackActivity : AppCompatActivity() {
 
         uploadTask.addOnSuccessListener {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
-                val mealSnack = MealSnack(
+                val firestore = FirebaseFirestore.getInstance()
+                val mealSnackCollection = firestore.collection("meals_snacks")
+                val newMealSnack = MealSnack(
+                    id = "",
                     name = name,
                     calories = calories,
                     time = time,
@@ -430,36 +433,43 @@ class InputMealSnackActivity : AppCompatActivity() {
                     timestamp = Date(), // Set the current date and time
                     accountId = currentUser.uid
                 )
-                val firestore = FirebaseFirestore.getInstance()
-                if (saveOnlyDrive) {
-                    firestore.collection("meals_snacks").add(mealSnack)
-                        .addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                // Download the image from Firebase Storage
-                                downloadImageFromFirebase(
-                                    uri.toString(),
-                                    name,
-                                    category,
-                                    progressDialog
-                                )
-                            } else {
+                mealSnackCollection.add(newMealSnack)
+                    .addOnSuccessListener { documentReference ->
+                        val documentId = documentReference.id
+                        mealSnackCollection.document(documentId).update("id", documentId)
+                            .addOnSuccessListener {
+                                if (saveOnlyDrive) {
+                                    // Download the image from Firebase Storage
+                                    downloadImageFromFirebase(
+                                        uri.toString(),
+                                        name,
+                                        category,
+                                        progressDialog
+                                    )
+                                } else {
+                                    downloadImageFromFirebase(
+                                        uri.toString(),
+                                        name,
+                                        category,
+                                        progressDialog
+                                    )
+                                }
+                            }
+                            .addOnFailureListener { e ->
                                 progressDialog.dismiss()
                                 Toast.makeText(
                                     this,
-                                    "Failed to add diary entry",
+                                    "Failed to update meal/snack ID: ${e.message}",
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 isUploading = false
                             }
-                        }
-                } else {
-                    downloadImageFromFirebase(
-                        uri.toString(),
-                        name,
-                        category,
-                        progressDialog
-                    )
-                }
+                    }
+                    .addOnFailureListener { e ->
+                        progressDialog.dismiss()
+                        Toast.makeText(this, "Failed to add diary entry", Toast.LENGTH_SHORT).show()
+                        isUploading = false
+                    }
             }
         }.addOnFailureListener {
             progressDialog.dismiss()
