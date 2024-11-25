@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.0"
+agp = "8.7.2"
 firebaseBom = "33.5.1"
 firebaseFirestoreKtx = "25.1.1"
 glide = "4.12.0"
@@ -24,6 +24,7 @@ firebaseStorageKtx = "21.0.1"
 materialVersion = "1.9.0"
 playServicesAuth = "20.2.0"
 playServicesAuthVersion = "21.2.0"
+playServicesBackup = "17.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +51,7 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 material-v190 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 play-services-auth-v2020 = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+play-services-backup = { module = "com.google.android.gms:play-services-backup", version.ref = "playServicesBackup" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

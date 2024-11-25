@@ -72,7 +72,7 @@ class WelcomePageBirthActivity : AppCompatActivity() {
             .set(userMap)
             .addOnSuccessListener {
                 // Navigate to WelcomePageConfirmLoginActivity
-                val intent = Intent(this, BasePage::class.java)
+                val intent = Intent(this, WelcomePageGoogleDriveRequest::class.java)
                 startActivity(intent)
                 finish() // Optionally finish the current activity
             }
