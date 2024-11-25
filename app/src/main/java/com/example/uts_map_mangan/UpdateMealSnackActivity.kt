@@ -204,9 +204,13 @@ class UpdateMealSnackActivity : AppCompatActivity() {
         startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK)
     }
 
-    private fun uploadImageToFirebase(uri: Uri, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+    private fun uploadImageToFirebase(
+        uri: Uri,
+        onSuccess: (String) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val storageRef = FirebaseStorage.getInstance().reference
-        val imageRef = storageRef.child("images/${uri.lastPathSegment}")
+        val imageRef = storageRef.child("diaries/${uri.lastPathSegment}")
         val uploadTask = imageRef.putFile(uri)
 
         uploadTask.addOnSuccessListener {
@@ -233,6 +237,7 @@ class UpdateMealSnackActivity : AppCompatActivity() {
                         imageView.setImageURI(uri)
                     }
                 }
+
                 REQUEST_IMAGE_PICK -> {
                     // Handle the gallery image
                     data?.data?.let { uri ->
@@ -269,6 +274,19 @@ class UpdateMealSnackActivity : AppCompatActivity() {
         picker.show(supportFragmentManager, "MATERIAL_TIME_PICKER")
     }
 
+    private fun deleteOldImageFromFirebase(
+        imageUrl: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
+        storageRef.delete().addOnSuccessListener {
+            onSuccess()
+        }.addOnFailureListener { exception ->
+            onFailure(exception)
+        }
+    }
+
     private fun updateMealSnack() {
         val name = nameInput.text.toString()
         val caloriesText = caloriesInput.text.toString()
@@ -290,14 +308,38 @@ class UpdateMealSnackActivity : AppCompatActivity() {
             progressDialog.show() // Show loading screen
             if (pictureUri != null) {
                 uploadImageToFirebase(pictureUri!!, { imageUrl ->
-                    mealSnack = mealSnack.copy(name = name, calories = calories, time = selectedTime, category = selectedCategory, pictureUrl = imageUrl)
-                    updateFirestoreDocument()
+                    deleteOldImageFromFirebase(mealSnack.pictureUrl, {
+                        mealSnack = mealSnack.copy(
+                            name = name,
+                            calories = calories,
+                            time = selectedTime,
+                            category = selectedCategory,
+                            pictureUrl = imageUrl
+                        )
+                        updateFirestoreDocument()
+                    }, { exception ->
+                        progressDialog.dismiss() // Dismiss loading screen on failure
+                        Toast.makeText(
+                            this,
+                            "Failed to delete old image: ${exception.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
                 }, { exception ->
                     progressDialog.dismiss() // Dismiss loading screen on failure
-                    Toast.makeText(this, "Failed to upload image: ${exception.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Failed to upload image: ${exception.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 })
             } else {
-                mealSnack = mealSnack.copy(name = name, calories = calories, time = selectedTime, category = selectedCategory)
+                mealSnack = mealSnack.copy(
+                    name = name,
+                    calories = calories,
+                    time = selectedTime,
+                    category = selectedCategory
+                )
                 updateFirestoreDocument()
             }
         } else {
@@ -316,7 +358,11 @@ class UpdateMealSnackActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss() // Dismiss loading screen on failure
-                Toast.makeText(this, "Failed to update meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Failed to update meal/snack: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
                 Log.e("UpdateMealSnackActivity", "Error updating mealSnack", e)
             }
     }
