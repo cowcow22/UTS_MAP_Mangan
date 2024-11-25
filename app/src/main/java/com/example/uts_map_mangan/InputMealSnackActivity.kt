@@ -156,7 +156,11 @@ class InputMealSnackActivity : AppCompatActivity() {
                     Toast.makeText(this, "Meal/Snack added successfully", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, "Failed to add meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Failed to add meal/snack: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         } else {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
@@ -171,10 +175,15 @@ class InputMealSnackActivity : AppCompatActivity() {
             val mealSnackCollection = firestore.collection("meals_snacks")
             mealSnackCollection.document(mealSnack.id).set(mealSnack)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Meal/Snack updated successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Meal/Snack updated successfully", Toast.LENGTH_SHORT)
+                        .show()
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, "Failed to update meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Failed to update meal/snack: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         } else {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
