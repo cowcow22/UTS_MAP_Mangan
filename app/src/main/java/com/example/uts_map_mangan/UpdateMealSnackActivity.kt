@@ -49,6 +49,7 @@ class UpdateMealSnackActivity : AppCompatActivity() {
     private var selectedTime: String = ""
     private var selectedCategory: String = ""
     private lateinit var progressDialog: ProgressDialog
+    private lateinit var deleteButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +117,47 @@ class UpdateMealSnackActivity : AppCompatActivity() {
         findViewById<Button>(R.id.back_button).setOnClickListener {
             onBackPressed()
         }
+
+        deleteButton = findViewById(R.id.delete_button)
+
+        deleteButton.setOnClickListener {
+            val dialogView = layoutInflater.inflate(R.layout.custom_alert_dialog, null)
+            val dialogBuilder = android.app.AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(false)
+
+            val alertDialog = dialogBuilder.create()
+            alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            dialogView.findViewById<Button>(R.id.dialog_button_yes).setOnClickListener {
+                deleteMealSnack()
+                alertDialog.dismiss()
+            }
+
+            dialogView.findViewById<Button>(R.id.dialog_button_no).setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            alertDialog.show()
+        }
+    }
+
+    private fun deleteMealSnack() {
+        val mealSnackCollection = firestore.collection("meals_snacks")
+        progressDialog.setMessage("Deleting meal/snack...")
+        progressDialog.show()
+
+        mealSnackCollection.document(mealSnack.id).delete()
+            .addOnSuccessListener {
+                progressDialog.dismiss()
+                Toast.makeText(this, "Meal/Snack deleted successfully", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
+            .addOnFailureListener { e ->
+                progressDialog.dismiss()
+                Toast.makeText(this, "Failed to delete meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun checkCameraPermission() {
