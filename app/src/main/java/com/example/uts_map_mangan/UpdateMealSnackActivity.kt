@@ -1,6 +1,7 @@
 package com.example.uts_map_mangan
 
 import android.Manifest
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -349,21 +350,24 @@ class UpdateMealSnackActivity : AppCompatActivity() {
 
     private fun updateFirestoreDocument() {
         val mealSnackCollection = firestore.collection("meals_snacks")
-        Log.d("UpdateMealSnackActivity", "Updating mealSnack with id: ${mealSnack.id}")
+        Log.d("UpdateMealSnack", "Updating meal/snack: $mealSnack")
         mealSnackCollection.document(mealSnack.id).set(mealSnack)
             .addOnSuccessListener {
-                progressDialog.dismiss() // Dismiss loading screen on success
+                progressDialog.dismiss()
                 Toast.makeText(this, "Meal/Snack updated successfully", Toast.LENGTH_SHORT).show()
+                val resultIntent = Intent()
+                // Optionally add extras if needed
+                setResult(Activity.RESULT_OK, resultIntent)
+                Log.d("UpdateMealSnackActivity", "setResult called with RESULT_OK")
                 finish()
             }
             .addOnFailureListener { e ->
-                progressDialog.dismiss() // Dismiss loading screen on failure
+                progressDialog.dismiss()
                 Toast.makeText(
                     this,
                     "Failed to update meal/snack: ${e.message}",
                     Toast.LENGTH_SHORT
                 ).show()
-                Log.e("UpdateMealSnackActivity", "Error updating mealSnack", e)
             }
     }
 

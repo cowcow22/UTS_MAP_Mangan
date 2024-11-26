@@ -14,6 +14,8 @@ import android.widget.CalendarView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -32,6 +34,7 @@ import java.util.Locale
 class DiaryFragment : Fragment(), DiaryAdapter.OnItemClickListener {
     companion object {
         private const val REQUEST_CODE_INPUT_MEAL_SNACK = 1001
+        private const val REQUEST_CODE_UPDATE_MEAL_SNACK = 1002
     }
 
     private lateinit var calendarView: CalendarView
@@ -52,6 +55,9 @@ class DiaryFragment : Fragment(), DiaryAdapter.OnItemClickListener {
     private var isLoading = true
     private lateinit var tvGreeting: TextView
     private lateinit var icGreeting: ImageView
+
+    private lateinit var inputMealSnackLauncher: ActivityResultLauncher<Intent>
+    private lateinit var updateMealSnackLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -187,16 +193,32 @@ class DiaryFragment : Fragment(), DiaryAdapter.OnItemClickListener {
                 requireActivity().findViewById(R.id.bottomNavigation)
             bottomNavigation.selectedItemId = R.id.nav_profile
         }
+
+        // Register activity result launchers
+        inputMealSnackLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    fetchDiaries()
+                }
+            }
+
+        updateMealSnackLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    fetchDiaries()
+                }
+            }
     }
 
     override fun onItemClick(mealSnack: MealSnack) {
-        // Handle item click
-        Toast.makeText(context, "Clicked: ${mealSnack.name}", Toast.LENGTH_SHORT).show()
+        val intent = Intent(context, UpdateMealSnackActivity::class.java)
+        intent.putExtra("mealSnack", mealSnack)
+        updateMealSnackLauncher.launch(intent)
     }
 
     private fun showInputDialog() {
         val intent = Intent(requireContext(), InputMealSnackActivity::class.java)
-        startActivityForResult(intent, REQUEST_CODE_INPUT_MEAL_SNACK)
+        inputMealSnackLauncher.launch(intent)
     }
 
     private fun fetchUserDataFromFirebase() {
@@ -272,16 +294,13 @@ class DiaryFragment : Fragment(), DiaryAdapter.OnItemClickListener {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_INPUT_MEAL_SNACK && resultCode == Activity.RESULT_OK) {
-            // Refresh or reload the fragment
-            fetchDiaries()
-        }
-    }
-
     fun onBackPressed() {
         activity?.onBackPressed()
         activity?.overridePendingTransition(0, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchDiaries()
     }
 }

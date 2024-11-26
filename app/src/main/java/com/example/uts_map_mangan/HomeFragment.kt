@@ -29,7 +29,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener, DiaryAdapter.OnItemClickListener {
+class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
+    DiaryAdapter.OnItemClickListener {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
@@ -309,4 +310,9 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener, DiaryAdapte
                 ).show()
             }
         }
+
+    override fun onResume() {
+        super.onResume()
+        fetchDiaryEntries()
+    }
 }
