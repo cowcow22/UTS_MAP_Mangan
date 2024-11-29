@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/ivRecipeDetailImage"
@@ -10,37 +12,68 @@
         android:background="@drawable/food_image_example"
         android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/tvRecipeDetailName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:hint="Ayam Goreng Bu Yudi "
-        android:layout_marginLeft="8dp"
-        android:fontFamily="@font/poppins_bold"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/rounded_background_recipe"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvRecipeDetailCalories"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        android:hint="300 calories"
-        android:layout_marginLeft="8dp"
-        android:fontFamily="@font/poppins_regular"
-        android:textSize="16sp" />
+        <!-- Garis tengah warna abu-abu -->
+        <View
+            android:layout_width="100dp"
+            android:layout_height="2dp"
+            android:background="@color/gray"
+            android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:id="@+id/tvRecipeDetailTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/black"
-        android:hint="30 menit"
-        android:layout_marginLeft="8dp"
-        android:fontFamily="@font/poppins_regular"
-        android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvRecipeDetailName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_bold"
+                android:hint="Ayam Goreng Bu Yudi"
+                android:textColor="@color/black"
+                android:textSize="19dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_clock"
+                app:tint="@color/black" />
+
+            <TextView
+                android:id="@+id/tvRecipeDetailTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="30 Min"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvRecipeDetailCalories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="300 calories"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
 </LinearLayout>
