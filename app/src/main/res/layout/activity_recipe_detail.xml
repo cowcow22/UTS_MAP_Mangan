@@ -1,13 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical" >
 
     <ImageView
         android:id="@+id/ivRecipeDetailImage"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
+        android:background="@drawable/food_image_example"
         android:scaleType="centerCrop" />
 
     <TextView
@@ -17,6 +17,9 @@
         android:layout_marginTop="16dp"
         android:textColor="@color/black"
         android:textSize="24sp"
+        android:hint="Ayam Goreng Bu Yudi "
+        android:layout_marginLeft="8dp"
+        android:fontFamily="@font/poppins_bold"
         android:textStyle="bold" />
 
     <TextView
@@ -25,6 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
+        android:hint="300 calories"
+        android:layout_marginLeft="8dp"
+        android:fontFamily="@font/poppins_regular"
         android:textSize="16sp" />
 
     <TextView
@@ -33,5 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
+        android:hint="30 menit"
+        android:layout_marginLeft="8dp"
+        android:fontFamily="@font/poppins_regular"
         android:textSize="16sp" />
 </LinearLayout>
