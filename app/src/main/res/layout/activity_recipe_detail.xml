@@ -1,79 +1,166 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/ivRecipeDetailImage"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/food_image_example"
-        android:scaleType="centerCrop" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="-50dp"
-        android:background="@drawable/rounded_background_recipe"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <!-- Garis tengah warna abu-abu -->
-        <View
-            android:layout_width="100dp"
-            android:layout_height="2dp"
-            android:background="@color/gray"
-            android:layout_gravity="center_horizontal" />
+        <ImageView
+            android:id="@+id/ivRecipeDetailImage"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/food_image_example"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_gravity="bottom"
+            android:layout_marginTop="-50dp"
+            android:background="@drawable/rounded_background_recipe"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvRecipeDetailName"
-                android:layout_width="0dp"
+            <!-- Garis tengah warna abu-abu -->
+            <View
+                android:layout_width="80dp"
+                android:layout_height="2dp"
+                android:background="#E6EBF2"
+                android:layout_gravity="center_horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins_bold"
-                android:hint="Ayam Goreng Bu Yudi"
-                android:textColor="@color/black"
-                android:textSize="19dp"
-                android:textStyle="bold" />
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_clock"
-                app:tint="@color/black" />
+                <TextView
+                    android:id="@+id/tvRecipeDetailName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_bold"
+                    android:hint="Ayam Goreng Bu Yudi"
+                    android:textColor="@color/black"
+                    android:textSize="19dp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvRecipeDetailTime"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_clock"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tvRecipeDetailTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:hint="30 Min"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_fire"
+                    app:tint="@color/gray" />
+
+                <TextView
+                    android:id="@+id/tvRecipeDetailCalories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:hint="300 calories"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Add two buttons (Ingredients and Instructions) here -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:background="@drawable/linear_layout_background"
+                android:padding="8dp"
+                android:layout_marginHorizontal="8dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnIngredients"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Ingredients"
+                    android:textSize="16dp"
+                    android:background="@drawable/button_background"
+                    app:backgroundTint="@null"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/btnInstructions"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Instructions"
+                    android:textSize="16dp"
+                    android:background="@drawable/button_background_off"
+                    app:backgroundTint="@null"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <!-- Add TextView for ingredients list here -->
+            <TextView
+                android:id="@+id/tvIngredientsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="8dp"
+                android:padding="8dp"
                 android:fontFamily="@font/poppins_regular"
-                android:hint="30 Min"
+                android:text="@string/ingredients_list"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
+
+            <!-- Add TextView for instructions list here -->
+            <TextView
+                android:id="@+id/tvInstructionsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="8dp"
+                android:padding="8dp"
+                android:fontFamily="@font/poppins_regular"
+                android:text="@string/instructions_list"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvRecipeDetailCalories"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/poppins_regular"
-            android:hint="300 calories"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">Mangan.</string>
     <string name="default_web_client_id">92290563870-udopmd2tv7h4v69cshmail9d08i1vlnj.apps.googleusercontent.com</string>
+    <string name="ingredients_list">
+        &#8226; 2 corn tortillas, sliced into strips\n
+        &#8226; Extra-virgin olive oil, for drizzling\n
+        &#8226; 1 medium head romaine lettuce, chopped\n
+        &#8226; 1 cup shredded red cabbage\n
+        &#8226; ½ cup cooked black beans, drained and rinsed\n
+        &#8226; 2 red radishes, thinly sliced\n
+        &#8226; ½ cup sliced cherry tomatoes and/or pico de gallo\n
+        &#8226; 1 avocado, sliced\n
+        &#8226; Jalapeno slices, optional\n
+        &#8226; Cilantro Lime Dressing, the creamy avocado variation\n
+        &#8226; Sea salt\n
+        &#8226; Lime wedges, for serving
+    </string>
+    <string name="instructions_list">
+        1. Preheat oven to 400°F. Toss tortilla strips with olive oil and salt. Bake for 10-14 minutes until crispy.\n
+        2. In a pan, cook mushrooms with olive oil until browned. Add walnuts, tamari, chili powder, and balsamic vinegar. Season with salt and pepper.\n
+        3. Assemble salad with lettuce, cabbage, black beans, taco meat, radishes, tomatoes, avocado, and dressing. Drizzle with olive oil, add salt, and serve with lime.
+    </string>
 </resources>
