@@ -2,12 +2,15 @@ package com.example.uts_map_mangan
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
 class RecipeDetailActivity : AppCompatActivity() {
+
+    private var isFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,8 @@ class RecipeDetailActivity : AppCompatActivity() {
         val btnInstructions: Button = findViewById(R.id.btnInstructions)
         val tvIngredientsList: TextView = findViewById(R.id.tvIngredientsList)
         val tvInstructionsList: TextView = findViewById(R.id.tvInstructionsList)
+        val backButton: Button = findViewById(R.id.back_button)
+        val favoriteButton: ImageButton = findViewById(R.id.favorite_button)
 
         if (recipeName != null) {
             nameView.text = recipeName
@@ -59,6 +64,21 @@ class RecipeDetailActivity : AppCompatActivity() {
             btnIngredients.setTextColor(ContextCompat.getColor(this, R.color.black))
             tvIngredientsList.visibility = TextView.GONE
             tvInstructionsList.visibility = TextView.VISIBLE
+        }
+
+        backButton.setOnClickListener {
+            finish()
+        }
+
+        favoriteButton.setOnClickListener {
+            isFavorite = !isFavorite
+            if (isFavorite) {
+                favoriteButton.setImageResource(R.drawable.ic_favorite_on)
+                favoriteButton.setColorFilter(ContextCompat.getColor(this, R.color.red))
+            } else {
+                favoriteButton.setImageResource(R.drawable.ic_favorite)
+                favoriteButton.setColorFilter(ContextCompat.getColor(this, R.color.black))
+            }
         }
     }
 }

@@ -10,12 +10,56 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/ivRecipeDetailImage"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@drawable/food_image_example"
-            android:scaleType="centerCrop" />
+            android:layout_height="300dp">
+
+            <ImageView
+                android:id="@+id/ivRecipeDetailImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/food_image_example"
+                android:scaleType="centerCrop" />
+
+            <Button
+                android:id="@+id/back_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="start|top"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_background"
+                android:gravity="end"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:textAllCaps="false"
+                android:translationZ="4dp"
+                app:backgroundTint="#FFFFFF"
+                app:cornerRadius="0dp"
+                app:icon="@drawable/close_ic"
+                app:iconGravity="end"
+                app:iconPadding="0dp"
+                app:iconSize="20dp"
+                app:iconTint="#000000" />
+
+            <ImageButton
+                android:id="@+id/favorite_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end|top"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_background"
+                android:padding="5dp"
+                android:src="@drawable/ic_favorite"
+                app:backgroundTint="#FFFFFF"
+                app:tint="#000000" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +70,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Garis tengah warna abu-abu -->
             <View
                 android:layout_width="80dp"
                 android:layout_height="2dp"
@@ -90,6 +133,7 @@
                     android:id="@+id/tvRecipeDetailCalories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:fontFamily="@font/poppins_regular"
                     android:hint="300 calories"
                     android:layout_marginTop="2dp"
@@ -97,7 +141,6 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
-            <!-- Add two buttons (Ingredients and Instructions) here -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,7 +178,6 @@
                     android:textColor="@color/black" />
             </LinearLayout>
 
-            <!-- Add TextView for ingredients list here -->
             <TextView
                 android:id="@+id/tvIngredientsList"
                 android:layout_width="match_parent"
@@ -148,7 +190,6 @@
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <!-- Add TextView for instructions list here -->
             <TextView
                 android:id="@+id/tvInstructionsList"
                 android:layout_width="match_parent"
