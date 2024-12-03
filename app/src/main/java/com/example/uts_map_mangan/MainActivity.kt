@@ -23,6 +23,9 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +38,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Initialize Firebase App Check
+        val firebaseAppCheck = FirebaseAppCheck.getInstance()
+        firebaseAppCheck.installAppCheckProviderFactory(
+            PlayIntegrityAppCheckProviderFactory.getInstance()
+        )
+
+
+        // Set Firestore settings
+        val settings = FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled(true)
+            .build()
+        FirebaseFirestore.getInstance().firestoreSettings = settings
+
 
         // Check if user is already logged in
         if (firebaseAuth.currentUser != null) {
@@ -73,10 +90,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
     }
-
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -131,4 +145,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
     }
+
 }
