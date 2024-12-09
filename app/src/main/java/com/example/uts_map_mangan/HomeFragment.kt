@@ -28,6 +28,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
     DiaryAdapter.OnItemClickListener {
@@ -167,8 +170,8 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
         // Fetch diary entries from Firestore
         fetchDiaryEntries()
 
-        // Load recipes (this is just an example, you should load actual data)
-        loadRecipes()
+        // Fetch recipes from Spoonacular API
+        fetchRecipes()
 
         // Navigate to ProfileFragment on profileImage click
         profileImage.setOnClickListener {
@@ -247,20 +250,37 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
             }
     }
 
-    private fun loadRecipes() {
-        // Example data, replace with actual data loading logic
-        val exampleRecipes = listOf(
-            RecipeEntry(
-                R.drawable.food_image_example,
-                "Healthy Taco Salad with fresh vegetables",
-                "120 Kcal",
-                "20 Min"
-            ),
-            RecipeEntry(R.drawable.food_image_example, "Grilled Chicken", "200 Kcal", "30 Min")
-        )
-        recipesList.clear()
-        recipesList.addAll(exampleRecipes)
-        recipesAdapter.notifyDataSetChanged()
+    private fun fetchRecipes() {
+        val apiKey = "4e4b7183979c418f97eaeaff95c48d76"
+        Log.d("HomeFragment", "Fetching recipes with API key: $apiKey")
+        RetrofitInstance.api.getRandomRecipes(apiKey, 10).enqueue(object : Callback<RecipeResponse> {
+            override fun onResponse(call: Call<RecipeResponse>, response: Response<RecipeResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.recipes?.let { recipes ->
+                        Log.d("HomeFragment", "Fetched ${recipes.size} recipes")
+                        recipesList.clear()
+                        recipesList.addAll(recipes.map { recipe ->
+                            val calories = recipe.nutrition?.nutrients?.find { it.name == "Calories" }?.amount ?: 0.0
+                            RecipeEntry(
+                                imageResId = R.drawable.food_image_example, // Placeholder image
+                                name = recipe.title,
+                                calories = "$calories Kcal",
+                                time = "${recipe.readyInMinutes} Min"
+                            )
+                        })
+                        recipesAdapter.notifyDataSetChanged()
+                    }
+                } else {
+                    Log.e("HomeFragment", "Failed to fetch recipes: ${response.errorBody()?.string()}")
+                    Toast.makeText(context, "Failed to fetch recipes", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<RecipeResponse>, t: Throwable) {
+                Log.e("HomeFragment", "Error fetching recipes: ${t.message}")
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     fun getGreetingMessage(): Pair<String, Int> {
