@@ -103,7 +103,7 @@ class ProfileFragment : Fragment() {
             GoogleNetHttpTransport.newTrustedTransport(),
             GsonFactory(),
             credential
-        ).setApplicationName("YourAppName").build()
+        ).setApplicationName("Map_Mangan").build()
 
         // Retrieve user data from SharedPreferences
         val cachedName = sharedPreferences.getString("name", null)
@@ -281,7 +281,14 @@ class ProfileFragment : Fragment() {
                     val category = document.getString("category")
 
                     if (pictureUrl != null && name != null && category != null) {
-                        checkAndUploadDiary(pictureUrl, name, category, progressDialog, document) {
+                        checkAndUploadDiary(
+                            document.id,
+                            pictureUrl,
+                            name,
+                            category,
+                            progressDialog,
+                            document
+                        ) {
                             processedEntries++
                             if (processedEntries == totalEntries) {
                                 progressDialog.dismiss()
@@ -290,6 +297,7 @@ class ProfileFragment : Fragment() {
                                     "All diary entries synced successfully",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                logDiariesFilesInDrive()
                             }
                         }
                     } else {
@@ -315,7 +323,32 @@ class ProfileFragment : Fragment() {
             }
     }
 
+    private fun logDiariesFilesInDrive() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val query = "mimeType='image/jpeg' and trashed=false"
+                val result =
+                    driveService.files().list().setQ(query).setSpaces("appDataFolder").execute()
+                val files = result.files
+
+                withContext(Dispatchers.Main) {
+                    files.forEach { file ->
+                        Log.d("ProfileFragment", "Diary file in Google Drive: ${file.name}")
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e(
+                        "ProfileFragment",
+                        "Failed to log diary files in Google Drive: ${e.message}"
+                    )
+                }
+            }
+        }
+    }
+
     private fun checkAndUploadDiary(
+        id: String,
         imageUrl: String,
         name: String,
         category: String,
@@ -337,7 +370,8 @@ class ProfileFragment : Fragment() {
         val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val date = dateFormat.format(timestamp)
 
-        val query = "name='${date}_${hourFormatted}_${category}_${name}.jpg' and trashed=false"
+        val query =
+            "name='${id}_${date}_${hourFormatted}_${category}_${name}.jpg' and trashed=false"
         CoroutineScope(Dispatchers.IO).launch {
             val result: FileList =
                 driveService.files().list().setQ(query).setSpaces("drive").execute()
@@ -392,7 +426,6 @@ class ProfileFragment : Fragment() {
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val folderId = getOrCreateFolder("ManganDiaries")
                 val filePath = uri.path ?: return@launch
                 val file = File(filePath)
 
@@ -420,12 +453,12 @@ class ProfileFragment : Fragment() {
 
                 val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
                 val date = dateFormat.format(timestamp)
-                val fileName = "${date}_${hourFormatted}_${category}_${name}.jpg"
+                val fileName = "${document.id}_${date}_${hourFormatted}_${category}_${name}.jpg"
 
                 val fileContent = FileContent("image/jpeg", file)
                 val driveFile = DriveFile().apply {
                     this.name = fileName
-                    parents = listOf(folderId)
+                    parents = listOf("appDataFolder")
                 }
 
                 driveService.files().create(driveFile, fileContent).execute()

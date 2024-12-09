@@ -83,7 +83,10 @@ class InputMealSnackActivity : AppCompatActivity() {
         // Configure Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestScopes(Scope(DriveScopes.DRIVE_FILE))
+            .requestScopes(
+                com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_FILE),
+                com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_APPDATA)
+            )
             .build()
 
         val googleSignInClient = GoogleSignIn.getClient(this, gso)
@@ -127,20 +130,14 @@ class InputMealSnackActivity : AppCompatActivity() {
         val name = findViewById<EditText>(R.id.foodname_input).text.toString()
         val calories = findViewById<EditText>(R.id.calories_input).text.toString().toInt()
 
-        if (mealSnack == null) {
-            // Add new meal/snack logic
-            val newMealSnack = MealSnack(
-                id = UUID.randomUUID().toString(), // Generate a unique ID
-                name = name,
-                calories = calories,
-                timestamp = Date()
-            )
-            saveMealSnackToDatabase(newMealSnack)
-        } else {
-            // Update existing meal/snack logic
-            mealSnack = mealSnack?.copy(name = name, calories = calories)
-            updateMealSnackInDatabase(mealSnack!!)
-        }
+        // Add new meal/snack logic
+        val newMealSnack = MealSnack(
+            id = UUID.randomUUID().toString(), // Generate a unique ID
+            name = name,
+            calories = calories,
+            timestamp = Date()
+        )
+        saveMealSnackToDatabase(newMealSnack)
 
         finish()
     }
@@ -167,28 +164,6 @@ class InputMealSnackActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateMealSnackInDatabase(mealSnack: MealSnack) {
-        val firestore = FirebaseFirestore.getInstance()
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
-        if (currentUser != null) {
-            val mealSnackCollection = firestore.collection("meals_snacks")
-            mealSnackCollection.document(mealSnack.id).set(mealSnack)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Meal/Snack updated successfully", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                .addOnFailureListener { e ->
-                    Toast.makeText(
-                        this,
-                        "Failed to update meal/snack: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-        } else {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     private fun setupDriveService(account: GoogleSignInAccount) {
         credential = GoogleAccountCredential.usingOAuth2(this, listOf(DriveScopes.DRIVE_FILE))
@@ -197,7 +172,7 @@ class InputMealSnackActivity : AppCompatActivity() {
             NetHttpTransport(),
             GsonFactory(),
             credential
-        ).setApplicationName("UTS Map Mangan").build()
+        ).setApplicationName("Map_Mangan").build()
     }
 
     private fun checkCameraPermission() {
@@ -362,7 +337,10 @@ class InputMealSnackActivity : AppCompatActivity() {
         if (account == null) {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestScopes(Scope(DriveScopes.DRIVE_FILE))
+                .requestScopes(
+                    com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_FILE),
+                    com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_APPDATA)
+                )
                 .build()
             val googleSignInClient = GoogleSignIn.getClient(this, gso)
             startActivityForResult(googleSignInClient.signInIntent, 1000)
@@ -433,7 +411,7 @@ class InputMealSnackActivity : AppCompatActivity() {
                 val firestore = FirebaseFirestore.getInstance()
                 val mealSnackCollection = firestore.collection("meals_snacks")
                 val newMealSnack = MealSnack(
-                    id = "",
+                    id = UUID.randomUUID().toString(),
                     name = name,
                     calories = calories,
                     time = time,
@@ -450,6 +428,7 @@ class InputMealSnackActivity : AppCompatActivity() {
                                 if (saveOnlyDrive) {
                                     // Download the image from Firebase Storage
                                     downloadImageFromFirebase(
+                                        newMealSnack.id,
                                         uri.toString(),
                                         name,
                                         category,
@@ -457,6 +436,7 @@ class InputMealSnackActivity : AppCompatActivity() {
                                     )
                                 } else {
                                     downloadImageFromFirebase(
+                                        newMealSnack.id,
                                         uri.toString(),
                                         name,
                                         category,
@@ -488,6 +468,7 @@ class InputMealSnackActivity : AppCompatActivity() {
     }
 
     private fun downloadImageFromFirebase(
+        id: String,
         imageUrl: String,
         name: String,
         category: String,
@@ -499,7 +480,7 @@ class InputMealSnackActivity : AppCompatActivity() {
         storageRef.getFile(localFile).addOnSuccessListener {
             // Image downloaded successfully, now upload it to Google Drive
             val uri = Uri.fromFile(localFile)
-            saveImageToDrive(uri, name, category, progressDialog)
+            saveImageToDrive(id, uri, name, category, progressDialog)
         }.addOnFailureListener {
             progressDialog.dismiss()
             Toast.makeText(this, "Failed to download image from Firebase", Toast.LENGTH_SHORT)
@@ -508,25 +489,8 @@ class InputMealSnackActivity : AppCompatActivity() {
         }
     }
 
-    private fun getOrCreateFolder(folderName: String): String {
-        val query =
-            "mimeType='application/vnd.google-apps.folder' and name='$folderName' and trashed=false"
-        val result: FileList = driveService.files().list().setQ(query).setSpaces("drive").execute()
-        val folder = result.files.firstOrNull()
-
-        return if (folder == null) {
-            val newFolder = DriveFile().apply {
-                name = folderName
-                mimeType = "application/vnd.google-apps.folder"
-            }
-            val createdFolder = driveService.files().create(newFolder).setFields("id").execute()
-            createdFolder.id
-        } else {
-            folder.id
-        }
-    }
-
     private fun saveImageToDrive(
+        id: String,
         uri: Uri,
         name: String,
         category: String,
@@ -534,7 +498,6 @@ class InputMealSnackActivity : AppCompatActivity() {
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val folderId = getOrCreateFolder("ManganDiaries")
                 val filePath = uri.path ?: return@launch
                 val file = File(filePath)
 
@@ -564,12 +527,12 @@ class InputMealSnackActivity : AppCompatActivity() {
 
                 val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
                 val date = dateFormat.format(timestamp)
-                val fileName = "${date}_${hourFormatted}_${category}_${name}.jpg"
+                val fileName = "${id}_${date}_${hourFormatted}_${category}_${name}.jpg"
 
                 val fileContent = FileContent("image/jpeg", file)
                 val driveFile = DriveFile().apply {
                     this.name = fileName
-                    parents = listOf(folderId)
+                    parents = listOf("appDataFolder")
                 }
 
                 driveService.files().create(driveFile, fileContent).execute()

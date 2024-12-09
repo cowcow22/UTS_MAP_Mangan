@@ -39,7 +39,10 @@ class WelcomePageGoogleDriveRequest : AppCompatActivity() {
     private fun signInToGoogleDrive() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestScopes(com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_FILE))
+            .requestScopes(
+                com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_FILE),
+                com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_APPDATA)
+            )
             .build()
 
         val googleSignInClient = GoogleSignIn.getClient(this, gso)

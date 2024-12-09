@@ -19,17 +19,33 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.Scope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
+import com.google.api.client.http.FileContent
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.google.api.services.drive.model.File as DriveFile
 
 class UpdateMealSnackActivity : AppCompatActivity() {
 
@@ -50,6 +66,8 @@ class UpdateMealSnackActivity : AppCompatActivity() {
     private var selectedCategory: String = ""
     private lateinit var progressDialog: ProgressDialog
     private lateinit var deleteButton: Button
+    private lateinit var credential: GoogleAccountCredential
+    private lateinit var driveService: Drive
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +97,23 @@ class UpdateMealSnackActivity : AppCompatActivity() {
         caloriesInput.setText(mealSnack.calories.toString())
         selectedTime = mealSnack.time
         timePickerButton.text = selectedTime
+
+        // Configure Google Sign-In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestScopes(
+                com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_FILE),
+                com.google.android.gms.common.api.Scope(DriveScopes.DRIVE_APPDATA)
+            )
+            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(this, gso)
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            setupDriveService(account)
+        } else {
+            startActivityForResult(googleSignInClient.signInIntent, 1000)
+        }
 
         // Set up category toggle group
         when (mealSnack.category) {
@@ -142,6 +177,17 @@ class UpdateMealSnackActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupDriveService(account: GoogleSignInAccount) {
+        credential = GoogleAccountCredential.usingOAuth2(this, listOf(DriveScopes.DRIVE_FILE))
+        credential.selectedAccount = account.account
+        driveService = Drive.Builder(
+            NetHttpTransport(),
+            GsonFactory(),
+            credential
+        ).setApplicationName("Map_Mangan").build()
+    }
+
+
     private fun deleteMealSnack() {
         val mealSnackCollection = firestore.collection("meals_snacks")
         progressDialog.setMessage("Deleting meal/snack...")
@@ -149,6 +195,7 @@ class UpdateMealSnackActivity : AppCompatActivity() {
 
         mealSnackCollection.document(mealSnack.id).delete()
             .addOnSuccessListener {
+                deleteFileFromDrive(mealSnack.id)
                 progressDialog.dismiss()
                 Toast.makeText(this, "Meal/Snack deleted successfully", Toast.LENGTH_SHORT).show()
                 setResult(Activity.RESULT_OK)
@@ -156,8 +203,50 @@ class UpdateMealSnackActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
-                Toast.makeText(this, "Failed to delete meal/snack: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Failed to delete meal/snack: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+    }
+
+    private fun deleteFileFromDrive(mealSnackId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Query to find the file in Google Drive
+                val query = "name contains '$mealSnackId' and trashed=false"
+                val result =
+                    driveService.files().list().setQ(query).setSpaces("appDataFolder").execute()
+                for (file in result.files) {
+                    driveService.files().delete(file.id).execute()
+                }
+
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this@UpdateMealSnackActivity,
+                        "Meal/Snack deleted successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    finish()
+                }
+            } catch (e: UserRecoverableAuthIOException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    startActivityForResult(e.intent, REQUEST_AUTHORIZATION)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this@UpdateMealSnackActivity,
+                        "Failed to delete file from Google Drive: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun checkCameraPermission() {
@@ -360,6 +449,8 @@ class UpdateMealSnackActivity : AppCompatActivity() {
                             pictureUrl = imageUrl
                         )
                         updateFirestoreDocument()
+                        // Replace file in Google Drive
+                        replaceImageInDrive(pictureUri!!, name, selectedCategory, progressDialog)
                     }, { exception ->
                         progressDialog.dismiss() // Dismiss loading screen on failure
                         Toast.makeText(
@@ -387,6 +478,85 @@ class UpdateMealSnackActivity : AppCompatActivity() {
             }
         } else {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun replaceImageInDrive(
+        uri: Uri,
+        name: String,
+        category: String,
+        progressDialog: ProgressDialog
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val filePath = uri.path ?: return@launch
+                val file = File(filePath)
+
+                if (!file.exists()) {
+                    withContext(Dispatchers.Main) {
+                        progressDialog.dismiss()
+                        Toast.makeText(
+                            this@UpdateMealSnackActivity,
+                            "File not found: ${file.absolutePath}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    return@launch
+                }
+
+                val timestamp = Date()
+                val hour = selectedTime ?: "00:00 AM"
+
+                val inputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                val outputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+                val hourParsed = inputFormat.parse(hour)
+                val hourFormatted = outputFormat.format(hourParsed)
+
+                val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+                val date = dateFormat.format(timestamp)
+                val fileName = "${mealSnack.id}_${date}_${hourFormatted}_${category}_${name}.jpg"
+
+                val fileContent = FileContent("image/jpeg", file)
+                val driveFile = DriveFile().apply {
+                    this.name = fileName
+                    parents = listOf("appDataFolder")
+                }
+
+                // Delete the old file from Google Drive
+                val query = "name contains '${mealSnack.id}' and trashed=false"
+                val result =
+                    driveService.files().list().setQ(query).setSpaces("appDataFolder").execute()
+                for (file in result.files) {
+                    driveService.files().delete(file.id).execute()
+                }
+
+                // Upload the new file to Google Drive
+                driveService.files().create(driveFile, fileContent).execute()
+
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this@UpdateMealSnackActivity,
+                        "File replaced in Google Drive successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: UserRecoverableAuthIOException) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    startActivityForResult(e.intent, REQUEST_AUTHORIZATION)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this@UpdateMealSnackActivity,
+                        "Failed to replace image in Google Drive: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
     }
 
