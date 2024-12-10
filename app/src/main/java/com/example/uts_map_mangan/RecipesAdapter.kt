@@ -1,3 +1,4 @@
+// RecipesAdapter.kt
 package com.example.uts_map_mangan
 
 import android.view.LayoutInflater
@@ -6,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
 class RecipesAdapter(
     private val recipesList: List<RecipeEntry>,
@@ -35,7 +37,11 @@ class RecipesAdapter(
         private val recipeTime: TextView = itemView.findViewById(R.id.tvRecipeItemTime)
 
         fun bind(recipe: RecipeEntry, clickListener: OnItemClickListener) {
-            recipeImage.setImageResource(recipe.imageResId)
+            Glide.with(itemView.context)
+                .load(recipe.imageUrl)
+                .placeholder(recipe.imageResId) // Placeholder image
+                .error(R.drawable.food_image_example) // Error image
+                .into(recipeImage)
             recipeName.text = recipe.name
             recipeCalories.text = recipe.calories
             recipeTime.text = recipe.time

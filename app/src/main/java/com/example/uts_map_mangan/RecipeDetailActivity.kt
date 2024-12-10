@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 
 class RecipeDetailActivity : AppCompatActivity() {
 
@@ -17,7 +18,7 @@ class RecipeDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recipe_detail)
 
         val recipeName = intent.getStringExtra("RECIPE_NAME")
-        val recipeImage = intent.getIntExtra("RECIPE_IMAGE", 0)
+        val recipeImageUrl = intent.getStringExtra("RECIPE_IMAGE_URL")
         val recipeCalories = intent.getStringExtra("RECIPE_CALORIES")
         val recipeTime = intent.getStringExtra("RECIPE_TIME")
 
@@ -36,9 +37,7 @@ class RecipeDetailActivity : AppCompatActivity() {
             nameView.text = recipeName
         }
 
-        if (recipeImage != 0) {
-            imageView.setImageResource(recipeImage)
-        }
+
 
         if (recipeCalories != null) {
             caloriesView.text = recipeCalories
@@ -47,6 +46,13 @@ class RecipeDetailActivity : AppCompatActivity() {
         if (recipeTime != null) {
             timeView.text = recipeTime
         }
+
+        // Load the image using Glide
+        Glide.with(this)
+            .load(recipeImageUrl)
+            .placeholder(R.drawable.food_image_example) // Placeholder image
+            .error(R.drawable.food_image_example) // Error image
+            .into(imageView)
 
         btnIngredients.setOnClickListener {
             btnIngredients.setBackgroundResource(R.drawable.button_background)

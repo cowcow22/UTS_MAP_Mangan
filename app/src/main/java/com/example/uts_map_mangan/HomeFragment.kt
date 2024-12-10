@@ -192,7 +192,7 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
         // Handle item click and navigate to the new layout
         val intent = Intent(activity, RecipeDetailActivity::class.java)
         intent.putExtra("RECIPE_NAME", recipe.name)
-        intent.putExtra("RECIPE_IMAGE", recipe.imageResId)
+        intent.putExtra("RECIPE_IMAGE_URL", recipe.imageUrl)
         intent.putExtra("RECIPE_CALORIES", recipe.calories)
         intent.putExtra("RECIPE_TIME", recipe.time)
         startActivity(intent)
@@ -265,7 +265,8 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
                                 imageResId = R.drawable.food_image_example, // Placeholder image
                                 name = recipe.title,
                                 calories = "$calories Kcal",
-                                time = "${recipe.readyInMinutes} Min"
+                                time = "${recipe.readyInMinutes} Min",
+                                imageUrl = recipe.image
                             )
                         })
                         recipesAdapter.notifyDataSetChanged()
@@ -335,4 +336,5 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
         super.onResume()
         fetchDiaryEntries()
     }
+
 }

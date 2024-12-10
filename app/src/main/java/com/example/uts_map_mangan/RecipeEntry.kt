@@ -4,5 +4,6 @@ data class RecipeEntry(
     val imageResId: Int,
     val name: String,
     val calories: String,
-    val time: String
+    val time: String,
+    val imageUrl: String
 )
