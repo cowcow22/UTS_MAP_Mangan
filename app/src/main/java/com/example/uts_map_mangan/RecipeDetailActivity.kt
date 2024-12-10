@@ -1,6 +1,8 @@
 package com.example.uts_map_mangan
 
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -22,6 +24,7 @@ class RecipeDetailActivity : AppCompatActivity() {
         val recipeCalories = intent.getStringExtra("RECIPE_CALORIES")
         val recipeTime = intent.getStringExtra("RECIPE_TIME")
         val recipeIngredients = intent.getStringArrayListExtra("RECIPE_INGREDIENTS")
+        val recipeInstructions = intent.getStringExtra("RECIPE_INSTRUCTIONS")
 
         val imageView: ImageView = findViewById(R.id.ivRecipeDetailImage)
         val nameView: TextView = findViewById(R.id.tvRecipeDetailName)
@@ -56,6 +59,7 @@ class RecipeDetailActivity : AppCompatActivity() {
             .into(imageView)
 
         tvIngredientsList.text = recipeIngredients?.joinToString("\n") { it }
+        tvInstructionsList.text = recipeInstructions?.let { convertHtmlToSpanned(it) }
 
         btnIngredients.setOnClickListener {
             btnIngredients.setBackgroundResource(R.drawable.button_background)
@@ -88,6 +92,15 @@ class RecipeDetailActivity : AppCompatActivity() {
                 favoriteButton.setImageResource(R.drawable.ic_favorite)
                 favoriteButton.setColorFilter(ContextCompat.getColor(this, R.color.black))
             }
+        }
+
+    }
+
+    private fun convertHtmlToSpanned(html: String): Spanned {
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
+        } else {
+            Html.fromHtml(html)
         }
     }
 }

@@ -6,5 +6,6 @@ data class RecipeEntry(
     val calories: String,
     val time: String,
     val imageUrl: String,
-    val extendedIngredients: List<ExtendedIngredients>
+    val extendedIngredients: List<ExtendedIngredients>,
+    val instructions: String
 )

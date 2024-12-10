@@ -11,6 +11,7 @@ data class Recipe(
     val spoonacularScore: Double,
     val image: String,
     val extendedIngredients: List<ExtendedIngredients>,
+    val instructions: String
 )
 
 data class ExtendedIngredients(

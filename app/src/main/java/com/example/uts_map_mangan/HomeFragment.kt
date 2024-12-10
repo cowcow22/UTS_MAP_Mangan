@@ -196,6 +196,7 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
         intent.putExtra("RECIPE_CALORIES", recipe.calories)
         intent.putExtra("RECIPE_TIME", recipe.time)
         intent.putStringArrayListExtra("RECIPE_INGREDIENTS", ArrayList(recipe.extendedIngredients.map { it.original }))
+        intent.putExtra("RECIPE_INSTRUCTIONS", recipe.instructions)
         startActivity(intent)
     }
 
@@ -267,8 +268,9 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
                                 name = recipe.title,
                                 calories = String.format("%.2f Score", recipe.spoonacularScore),
                                 time = "${recipe.readyInMinutes} Min",
-                                imageUrl = recipe.image,
-                                extendedIngredients = recipe.extendedIngredients
+                                imageUrl = recipe.image ?: "",
+                                extendedIngredients = recipe.extendedIngredients,
+                                instructions = recipe.instructions
                             )
                         })
                         recipesAdapter.notifyDataSetChanged()
