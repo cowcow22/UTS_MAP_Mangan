@@ -57,7 +57,7 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_fire"
+                    android:src="@drawable/ic_health"
                     app:tint="@android:color/darker_gray" />
 
                 <TextView

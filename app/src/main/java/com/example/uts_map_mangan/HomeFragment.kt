@@ -195,6 +195,7 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
         intent.putExtra("RECIPE_IMAGE_URL", recipe.imageUrl)
         intent.putExtra("RECIPE_CALORIES", recipe.calories)
         intent.putExtra("RECIPE_TIME", recipe.time)
+        intent.putStringArrayListExtra("RECIPE_INGREDIENTS", ArrayList(recipe.extendedIngredients.map { it.original }))
         startActivity(intent)
     }
 
@@ -260,13 +261,14 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
                         Log.d("HomeFragment", "Fetched ${recipes.size} recipes")
                         recipesList.clear()
                         recipesList.addAll(recipes.map { recipe ->
-                            val calories = recipe.nutrition?.nutrients?.find { it.name == "Calories" }?.amount ?: 0.0
+                            Log.d("HomeFragment", "Recipe: $recipe")
                             RecipeEntry(
                                 imageResId = R.drawable.food_image_example, // Placeholder image
                                 name = recipe.title,
-                                calories = "$calories Kcal",
+                                calories = String.format("%.2f Score", recipe.spoonacularScore),
                                 time = "${recipe.readyInMinutes} Min",
-                                imageUrl = recipe.image
+                                imageUrl = recipe.image,
+                                extendedIngredients = recipe.extendedIngredients
                             )
                         })
                         recipesAdapter.notifyDataSetChanged()

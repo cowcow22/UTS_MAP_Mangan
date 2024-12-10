@@ -126,7 +126,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_fire"
+                    android:src="@drawable/ic_health"
                     app:tint="@color/gray" />
 
                 <TextView

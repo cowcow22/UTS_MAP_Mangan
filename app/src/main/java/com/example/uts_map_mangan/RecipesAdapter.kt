@@ -43,7 +43,7 @@ class RecipesAdapter(
                 .error(R.drawable.food_image_example) // Error image
                 .into(recipeImage)
             recipeName.text = recipe.name
-            recipeCalories.text = recipe.calories
+            recipeCalories.text = recipe.calories // Display spoonacularScore
             recipeTime.text = recipe.time
 
             itemView.setOnClickListener {

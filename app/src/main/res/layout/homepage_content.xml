@@ -158,23 +158,33 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnBreakfast"
+                    android:id="@+id/btnLunch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:backgroundTint="#A5BE00"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Breakfast"
+                    android:text="Lunch"
                     android:textColor="#FFFFFF" />
 
                 <Button
-                    android:id="@+id/btnLunch"
+                    android:id="@+id/btnMainCourse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:backgroundTint="#F1F5F5"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Lunch"
+                    android:text="MainCourse"
+                    android:textColor="#000000" />
+
+                <Button
+                    android:id="@+id/btnMainDish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#F1F5F5"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="MainDish"
                     android:textColor="#000000" />
 
                 <Button
@@ -185,25 +195,6 @@
                     android:backgroundTint="#F1F5F5"
                     android:fontFamily="@font/poppins_regular"
                     android:text="Dinner"
-                    android:textColor="#000000" />
-
-                <Button
-                    android:id="@+id/btnSnack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:backgroundTint="#F1F5F5"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="Snack"
-                    android:textColor="#000000" />
-
-                <Button
-                    android:id="@+id/btnDrink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#F1F5F5"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="Drink"
                     android:textColor="#000000" />
 
             </LinearLayout>

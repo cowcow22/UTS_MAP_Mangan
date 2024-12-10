@@ -8,15 +8,12 @@ data class RecipeResponse(
 data class Recipe(
     val title: String,
     val readyInMinutes: Int,
-    val nutrition: Nutrition,
-    val image: String
+    val spoonacularScore: Double,
+    val image: String,
+    val extendedIngredients: List<ExtendedIngredients>,
 )
 
-data class Nutrition(
-    val nutrients: List<Nutrient>
+data class ExtendedIngredients(
+    val original: String
 )
 
-data class Nutrient(
-    val name: String,
-    val amount: Double
-)

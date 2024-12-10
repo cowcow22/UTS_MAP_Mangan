@@ -21,6 +21,7 @@ class RecipeDetailActivity : AppCompatActivity() {
         val recipeImageUrl = intent.getStringExtra("RECIPE_IMAGE_URL")
         val recipeCalories = intent.getStringExtra("RECIPE_CALORIES")
         val recipeTime = intent.getStringExtra("RECIPE_TIME")
+        val recipeIngredients = intent.getStringArrayListExtra("RECIPE_INGREDIENTS")
 
         val imageView: ImageView = findViewById(R.id.ivRecipeDetailImage)
         val nameView: TextView = findViewById(R.id.tvRecipeDetailName)
@@ -53,6 +54,8 @@ class RecipeDetailActivity : AppCompatActivity() {
             .placeholder(R.drawable.food_image_example) // Placeholder image
             .error(R.drawable.food_image_example) // Error image
             .into(imageView)
+
+        tvIngredientsList.text = recipeIngredients?.joinToString("\n") { it }
 
         btnIngredients.setOnClickListener {
             btnIngredients.setBackgroundResource(R.drawable.button_background)
