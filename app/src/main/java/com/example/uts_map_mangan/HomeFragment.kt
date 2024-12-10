@@ -24,7 +24,9 @@ import java.util.Calendar
 import java.util.Locale
 import android.Manifest
 import android.content.pm.PackageManager
+import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -52,6 +54,11 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
     private lateinit var icGreeting: ImageView
     private lateinit var popUpNotification: PopUpNotification
     private lateinit var notificationSharedPreferences: SharedPreferences
+    private lateinit var btnRecommend: Button
+    private lateinit var btnLunch: Button
+    private lateinit var btnMainCourse: Button
+    private lateinit var btnMainDish: Button
+    private lateinit var btnDinner: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +69,11 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        btnRecommend = view.findViewById(R.id.btnRecommend)
+        btnLunch = view.findViewById(R.id.btnLunch)
+        btnMainCourse = view.findViewById(R.id.btnMainCourse)
+        btnMainDish = view.findViewById(R.id.btnMainDish)
+        btnDinner = view.findViewById(R.id.btnDinner)
         popUpNotification = PopUpNotification(requireContext())
 
         notificationSharedPreferences =
@@ -170,8 +181,24 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
         // Fetch diary entries from Firestore
         fetchDiaryEntries()
 
-        // Fetch recipes from Spoonacular API
-        fetchRecipes()
+        val buttons = listOf(btnRecommend, btnLunch, btnMainCourse, btnMainDish, btnDinner)
+
+        buttons.forEach { button ->
+            button.setOnClickListener {
+                buttons.forEach { btn ->
+                    btn.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.inactive_button_background))
+                    btn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                    btn.typeface = ResourcesCompat.getFont(requireContext(), R.font.poppins_regular)
+                }
+                button.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.active_button_background))
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                button.typeface = ResourcesCompat.getFont(requireContext(), R.font.poppins_bold)
+                fetchRecipes(button.text.toString().toLowerCase(Locale.ROOT))
+            }
+        }
+
+        // Fetch recommended recipes by default
+        fetchRecipes("recommend")
 
         // Navigate to ProfileFragment on profileImage click
         profileImage.setOnClickListener {
@@ -186,6 +213,8 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
                 requireActivity().findViewById(R.id.bottomNavigation)
             bottomNavigation.selectedItemId = R.id.nav_profile
         }
+
+
     }
 
     override fun onItemClick(recipe: RecipeEntry) {
@@ -195,7 +224,10 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
         intent.putExtra("RECIPE_IMAGE_URL", recipe.imageUrl)
         intent.putExtra("RECIPE_CALORIES", recipe.calories)
         intent.putExtra("RECIPE_TIME", recipe.time)
-        intent.putStringArrayListExtra("RECIPE_INGREDIENTS", ArrayList(recipe.extendedIngredients.map { it.original }))
+        intent.putStringArrayListExtra(
+            "RECIPE_INGREDIENTS",
+            ArrayList(recipe.extendedIngredients.map { it.original })
+        )
         intent.putExtra("RECIPE_INSTRUCTIONS", recipe.instructions)
         startActivity(intent)
     }
@@ -252,40 +284,55 @@ class HomeFragment : Fragment(), RecipesAdapter.OnItemClickListener,
             }
     }
 
-    private fun fetchRecipes() {
+    private fun fetchRecipes(category: String) {
         val apiKey = "4e4b7183979c418f97eaeaff95c48d76"
         Log.d("HomeFragment", "Fetching recipes with API key: $apiKey")
-        RetrofitInstance.api.getRandomRecipes(apiKey, 10).enqueue(object : Callback<RecipeResponse> {
-            override fun onResponse(call: Call<RecipeResponse>, response: Response<RecipeResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.recipes?.let { recipes ->
-                        Log.d("HomeFragment", "Fetched ${recipes.size} recipes")
-                        recipesList.clear()
-                        recipesList.addAll(recipes.map { recipe ->
-                            Log.d("HomeFragment", "Recipe: $recipe")
-                            RecipeEntry(
-                                imageResId = R.drawable.food_image_example, // Placeholder image
-                                name = recipe.title,
-                                calories = String.format("%.2f Score", recipe.spoonacularScore),
-                                time = "${recipe.readyInMinutes} Min",
-                                imageUrl = recipe.image ?: "",
-                                extendedIngredients = recipe.extendedIngredients,
-                                instructions = recipe.instructions
-                            )
-                        })
-                        recipesAdapter.notifyDataSetChanged()
-                    }
-                } else {
-                    Log.e("HomeFragment", "Failed to fetch recipes: ${response.errorBody()?.string()}")
-                    Toast.makeText(context, "Failed to fetch recipes", Toast.LENGTH_SHORT).show()
-                }
-            }
 
-            override fun onFailure(call: Call<RecipeResponse>, t: Throwable) {
-                Log.e("HomeFragment", "Error fetching recipes: ${t.message}")
-                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+        val call: Call<RecipeResponse> = if (category == "recommend") {
+            RetrofitInstance.api.getRandomRecipes(apiKey, 10)
+        } else {
+            RetrofitInstance.api.getRecipesBySearchQuery(apiKey, category, 10)
+        }
+
+        RetrofitInstance.api.getRandomRecipes(apiKey, 10)
+            .enqueue(object : Callback<RecipeResponse> {
+                override fun onResponse(
+                    call: Call<RecipeResponse>,
+                    response: Response<RecipeResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.recipes?.let { recipes ->
+                            Log.d("HomeFragment", "Fetched ${recipes.size} recipes")
+                            recipesList.clear()
+                            recipesList.addAll(recipes.map { recipe ->
+                                Log.d("HomeFragment", "Recipe: $recipe")
+                                RecipeEntry(
+                                    imageResId = R.drawable.food_image_example, // Placeholder image
+                                    name = recipe.title,
+                                    calories = String.format("%.2f Score", recipe.spoonacularScore),
+                                    time = "${recipe.readyInMinutes} Min",
+                                    imageUrl = recipe.image ?: "",
+                                    extendedIngredients = recipe.extendedIngredients,
+                                    instructions = recipe.instructions
+                                )
+                            })
+                            recipesAdapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        Log.e(
+                            "HomeFragment",
+                            "Failed to fetch recipes: ${response.errorBody()?.string()}"
+                        )
+                        Toast.makeText(context, "Failed to fetch recipes", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+                override fun onFailure(call: Call<RecipeResponse>, t: Throwable) {
+                    Log.e("HomeFragment", "Error fetching recipes: ${t.message}")
+                    Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
     fun getGreetingMessage(): Pair<String, Int> {

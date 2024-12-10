@@ -11,4 +11,11 @@ interface SpoonacularApi {
         @Query("apiKey") apiKey: String,
         @Query("number") number: Int
     ): Call<RecipeResponse>
+
+    @GET("recipes/complexSearch")
+    fun getRecipesBySearchQuery(
+        @Query("apiKey") apiKey: String,
+        @Query("type") query: String,
+        @Query("number") number: Int
+    ): Call<RecipeResponse>
 }

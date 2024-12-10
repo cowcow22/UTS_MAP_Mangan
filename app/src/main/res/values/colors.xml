@@ -12,4 +12,6 @@
     <color name="drink">#36C8F6</color>
     <color name="eat">#679436</color>
     <color name="red">#FF0000</color>
+    <color name="active_button_background">#A5BE00</color>
+    <color name="inactive_button_background">#F1F5F5</color>
 </resources>
